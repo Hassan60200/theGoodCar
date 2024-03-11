@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\DepartementRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DepartementRepository::class)]
@@ -30,6 +31,10 @@ class Departement
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    public function __construct()
+    {
+        $this->createdAt = new DateTimeImmutable('now');
+    }
     public function getId(): ?int
     {
         return $this->id;

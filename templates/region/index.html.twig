@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello RegionController!{% endblock %}
+
+{% block body %}
+
+
+<div class="">
+    {% for region in regions %}
+        <ul>
+            <li>{{ region.name}}</li>
+        </ul>
+    {% endfor %}
+</div>
+{% endblock %}

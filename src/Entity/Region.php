@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\RegionRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 #[ORM\Entity(repositoryClass: RegionRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -28,9 +30,13 @@ class Region
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column]
+    private ?int $code = null;
+
     public function __construct()
     {
         $this->departements = new ArrayCollection();
+        $this->createdAt = new DateTimeImmutable('now');
     }
 
     public function getId(): ?int
@@ -98,6 +104,18 @@ class Region
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
+    }
+
+    public function getCode(): ?int
+    {
+        return $this->code;
+    }
+
+    public function setCode(int $code): static
+    {
+        $this->code = $code;
+
+        return $this;
     }
 
 
