@@ -33,10 +33,14 @@ class Region
     #[ORM\Column]
     private ?int $code = null;
 
+    #[ORM\OneToMany(targetEntity: City::class, mappedBy: 'codeRegion')]
+    private Collection $cities;
+
     public function __construct()
     {
         $this->departements = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable('now');
+        $this->cities = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -114,6 +118,36 @@ class Region
     public function setCode(int $code): static
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, City>
+     */
+    public function getCities(): Collection
+    {
+        return $this->cities;
+    }
+
+    public function addCity(City $city): static
+    {
+        if (!$this->cities->contains($city)) {
+            $this->cities->add($city);
+            $city->setCodeRegion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCity(City $city): static
+    {
+        if ($this->cities->removeElement($city)) {
+            // set the owning side to null (unless already changed)
+            if ($city->getCodeRegion() === $this) {
+                $city->setCodeRegion(null);
+            }
+        }
 
         return $this;
     }

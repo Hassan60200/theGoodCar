@@ -2,22 +2,23 @@
 
 namespace App\Services;
 
+use App\Entity\City;
 use App\Entity\Departement;
 use App\Entity\Region;
+use App\Repository\CityRepository;
 use App\Repository\DepartementRepository;
 use App\Repository\RegionRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ApiManager
 {
-
     public function __construct(
         private readonly HttpClientInterface    $client,
         private readonly EntityManagerInterface $entityManager,
         private readonly RegionRepository       $regionRepository,
         private readonly DepartementRepository  $departementRepository,
+        private readonly CityRepository         $cityRepository,
     )
     {
     }
@@ -46,10 +47,8 @@ class ApiManager
         return $this->regionRepository->findAll();
     }
 
-
-    public function getDepartements()
+    public function getDepartements(): array
     {
-
         $existingDepartements = $this->departementRepository->findAll();
 
         if (empty($existingDepartements)) {
@@ -72,5 +71,31 @@ class ApiManager
         }
 
         return $this->departementRepository->findAll();
+    }
+
+    public function getCities(): array
+    {
+        $existingCities = $this->cityRepository->findAll();
+
+        if (empty($existingCities)) {
+            $cities = $this->client->request(
+                'GET',
+                'https://geo.api.gouv.fr/communes&limit=1000'
+            );
+
+            foreach ($cities->toArray() as $cityData) {
+                $region = $this->regionRepository->findOneBy(['code' => $cityData['codeRegion']]);
+                $departement = $this->departementRepository->findOneBy(['code' => $cityData['codeDepartement']]);
+
+                $city = new City();
+                $city->setName($cityData['nom'])
+                    ->setCodeDepartement($departement)
+                    ->setCodeRegion($region)
+                    ->setCode(intval($cityData['code']))
+                    ->setZipCode($cityData['codesPostaux'][0]);
+            }
+        }
+
+        return $this->cityRepository->findAll();
     }
 }

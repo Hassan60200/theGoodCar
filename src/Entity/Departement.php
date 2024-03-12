@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\DepartementRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DepartementRepository::class)]
@@ -31,9 +33,13 @@ class Departement
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\OneToMany(targetEntity: City::class, mappedBy: 'codeDepartement')]
+    private Collection $cities;
+
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable('now');
+        $this->cities = new ArrayCollection();
     }
     public function getId(): ?int
     {
@@ -94,6 +100,36 @@ class Departement
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @return Collection<int, City>
+     */
+    public function getCities(): Collection
+    {
+        return $this->cities;
+    }
+
+    public function addCity(City $city): static
+    {
+        if (!$this->cities->contains($city)) {
+            $this->cities->add($city);
+            $city->setCodeDepartement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCity(City $city): static
+    {
+        if ($this->cities->removeElement($city)) {
+            // set the owning side to null (unless already changed)
+            if ($city->getCodeDepartement() === $this) {
+                $city->setCodeDepartement(null);
+            }
+        }
+
+        return $this;
     }
 
 
