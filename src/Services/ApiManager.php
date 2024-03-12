@@ -73,14 +73,14 @@ class ApiManager
         return $this->departementRepository->findAll();
     }
 
-    public function getCities(): array
+    public function getCities(string $value): array
     {
         $existingCities = $this->cityRepository->findAll();
 
         if (empty($existingCities)) {
             $cities = $this->client->request(
                 'GET',
-                'https://geo.api.gouv.fr/communes&limit=1000'
+                'https://geo.api.gouv.fr/communes?nom=' . $value
             );
 
             foreach ($cities->toArray() as $cityData) {

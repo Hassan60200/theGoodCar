@@ -24,24 +24,22 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $form->get('password')->getData();
             $user->setPassword($passwordEncoder->hashPassword($user, $password));
-           
 
             $entityManager->persist($user);
             $entityManager->flush();
 
             $this->addFlash(
                 'success',
-                "Votre compte a bien été créé ! Vous pouvez maintenant vous connecter !"
+                'Votre compte a bien été créé ! Vous pouvez maintenant vous connecter !'
             );
 
             return $this->redirectToRoute('app_login');
         }
 
         return $this->render('security/register.html.twig', [
-            'registrationForm' => $form
+            'registrationForm' => $form,
         ]);
     }
-
 
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response

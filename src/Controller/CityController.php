@@ -12,7 +12,7 @@ class CityController extends AbstractController
     #[Route('/city', name: 'app_city')]
     public function index(ApiManager $apiManager): Response
     {
-        $cities = $apiManager->getCities();
+        $cities = $apiManager->getCities('paris');
         return $this->render('city/index.html.twig', [
             'cities' => $cities,
         ]);
