@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Services\ApiManager;
+use App\Repository\DepartementRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -10,10 +10,10 @@ use Symfony\Component\Routing\Attribute\Route;
 class DepartementController extends AbstractController
 {
     #[Route('/departement', name: 'app_departement')]
-    public function index(ApiManager $apiManager): Response
+    public function index(DepartementRepository $departementRepository): Response
     {
+        $departements = $departementRepository->findAll();
 
-        $departements = $apiManager->getDepartements();
         return $this->render('departement/index.html.twig', [
             'departements' => $departements,
         ]);
