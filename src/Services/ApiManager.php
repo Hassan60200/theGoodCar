@@ -13,14 +13,15 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ApiManager
 {
+    public const API_URL = 'https://geo.api.gouv.fr/';
+
     public function __construct(
-        private readonly HttpClientInterface    $client,
+        private readonly HttpClientInterface $client,
         private readonly EntityManagerInterface $entityManager,
-        private readonly RegionRepository       $regionRepository,
-        private readonly DepartementRepository  $departementRepository,
-        private readonly CityRepository         $cityRepository,
-    )
-    {
+        private readonly RegionRepository $regionRepository,
+        private readonly DepartementRepository $departementRepository,
+        private readonly CityRepository $cityRepository,
+    ) {
     }
 
     public function getRegions()
@@ -30,7 +31,7 @@ class ApiManager
         if (empty($existingRegions)) {
             $regions = $this->client->request(
                 'GET',
-                'https://geo.api.gouv.fr/regions'
+                self::API_URL.'regions'
             );
 
             foreach ($regions->toArray() as $regionData) {
@@ -54,7 +55,7 @@ class ApiManager
         if (empty($existingDepartements)) {
             $departements = $this->client->request(
                 'GET',
-                'https://geo.api.gouv.fr/departements'
+                self::API_URL.'departements'
             );
 
             foreach ($departements->toArray() as $departementData) {
@@ -80,7 +81,7 @@ class ApiManager
         if (empty($existingCities)) {
             $cities = $this->client->request(
                 'GET',
-                'https://geo.api.gouv.fr/communes?nom=' . $value
+                'https://geo.api.gouv.fr/communes?nom='.$value
             );
 
             foreach ($cities->toArray() as $cityData) {
