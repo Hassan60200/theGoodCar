@@ -7,16 +7,12 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
-#[ORM\HasLifecycleCallbacks]
-class Car
+class Car extends AbstractEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\Column(length: 50)]
-    private ?string $brand = null;
 
     #[ORM\Column(length: 50)]
     private ?string $model = null;
@@ -36,30 +32,12 @@ class Car
     #[ORM\Column]
     private ?int $mileage = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
-
     #[ORM\Column(length: 255)]
     private ?string $img = null;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getBrand(): ?string
-    {
-        return $this->brand;
-    }
-
-    public function setBrand(string $brand): static
-    {
-        $this->brand = $brand;
-
-        return $this;
     }
 
     public function getModel(): ?string
@@ -132,26 +110,6 @@ class Car
         $this->mileage = $mileage;
 
         return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(?\DateTimeImmutable $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
     }
 
     public function getImg(): ?string

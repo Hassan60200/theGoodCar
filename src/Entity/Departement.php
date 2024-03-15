@@ -9,8 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DepartementRepository::class)]
-#[ORM\HasLifecycleCallbacks]
-class Departement
+class Departement extends AbstractEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -27,18 +26,11 @@ class Departement
     #[ORM\JoinColumn(nullable: false)]
     private ?Region $region = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
-
     #[ORM\OneToMany(targetEntity: City::class, mappedBy: 'codeDepartement')]
     private Collection $cities;
 
     public function __construct()
     {
-        $this->createdAt = new DateTimeImmutable('now');
         $this->cities = new ArrayCollection();
     }
     public function getId(): ?int
@@ -80,26 +72,6 @@ class Departement
         $this->region = $region;
 
         return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(?\DateTimeImmutable $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
     }
 
     /**

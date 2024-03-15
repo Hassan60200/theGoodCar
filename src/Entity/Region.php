@@ -10,8 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\DateTime;
 
 #[ORM\Entity(repositoryClass: RegionRepository::class)]
-#[ORM\HasLifecycleCallbacks]
-class Region
+class Region extends AbstractEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -25,12 +24,6 @@ class Region
     private Collection $departements;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
-
-    #[ORM\Column]
     private ?int $code = null;
 
     #[ORM\OneToMany(targetEntity: City::class, mappedBy: 'codeRegion')]
@@ -39,7 +32,6 @@ class Region
     public function __construct()
     {
         $this->departements = new ArrayCollection();
-        $this->createdAt = new DateTimeImmutable('now');
         $this->cities = new ArrayCollection();
     }
 
@@ -88,26 +80,6 @@ class Region
         }
 
         return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(?\DateTimeImmutable $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
     }
 
     public function getCode(): ?int
