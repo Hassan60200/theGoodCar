@@ -14,9 +14,6 @@ class Car extends AbstractEntity
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $model = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $yearOfManufacture = null;
 
@@ -39,21 +36,13 @@ class Car extends AbstractEntity
     #[ORM\JoinColumn(nullable: false)]
     private ?BrandsCar $brand = null;
 
+    #[ORM\ManyToOne(inversedBy: 'cars')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?ModelsCar $carModel = null;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getModel(): ?string
-    {
-        return $this->model;
-    }
-
-    public function setModel(string $model): static
-    {
-        $this->model = $model;
-
-        return $this;
     }
 
     public function getYearOfManufacture(): ?\DateTimeInterface
@@ -136,6 +125,18 @@ class Car extends AbstractEntity
     public function setBrand(?BrandsCar $brand): static
     {
         $this->brand = $brand;
+
+        return $this;
+    }
+
+    public function getCarModel(): ?ModelsCar
+    {
+        return $this->carModel;
+    }
+
+    public function setCarModel(?ModelsCar $carModel): static
+    {
+        $this->carModel = $carModel;
 
         return $this;
     }

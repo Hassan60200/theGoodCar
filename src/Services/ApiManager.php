@@ -5,26 +5,33 @@ namespace App\Services;
 use App\Entity\BrandsCar;
 use App\Entity\City;
 use App\Entity\Departement;
+use App\Entity\ModelsCar;
 use App\Entity\Region;
 use App\Repository\BrandsCarRepository;
 use App\Repository\CityRepository;
 use App\Repository\DepartementRepository;
+use App\Repository\ModelsCarRepository;
 use App\Repository\RegionRepository;
+use App\Trait\CarsTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ApiManager
 {
+    use CarsTrait;
+
     public const API_URL = 'https://geo.api.gouv.fr/';
 
     public function __construct(
-        private readonly HttpClientInterface $client,
+        private readonly HttpClientInterface    $client,
         private readonly EntityManagerInterface $entityManager,
-        private readonly RegionRepository $regionRepository,
-        private readonly DepartementRepository $departementRepository,
-        private readonly CityRepository $cityRepository,
-        private readonly BrandsCarRepository $brandsCarRepository
-    ) {
+        private readonly RegionRepository       $regionRepository,
+        private readonly DepartementRepository  $departementRepository,
+        private readonly CityRepository         $cityRepository,
+        private readonly BrandsCarRepository    $brandsCarRepository,
+        private readonly ModelsCarRepository    $modelsCarRepository
+    )
+    {
     }
 
     public function getRegions()
@@ -34,7 +41,7 @@ class ApiManager
         if (empty($existingRegions)) {
             $regions = $this->client->request(
                 'GET',
-                self::API_URL.'regions'
+                self::API_URL . 'regions'
             );
 
             foreach ($regions->toArray() as $regionData) {
@@ -58,7 +65,7 @@ class ApiManager
         if (empty($existingDepartements)) {
             $departements = $this->client->request(
                 'GET',
-                self::API_URL.'departements'
+                self::API_URL . 'departements'
             );
 
             foreach ($departements->toArray() as $departementData) {
@@ -84,7 +91,7 @@ class ApiManager
         if (empty($existingCities)) {
             $cities = $this->client->request(
                 'GET',
-                'https://geo.api.gouv.fr/communes?nom='.$value
+                'https://geo.api.gouv.fr/communes?nom=' . $value
             );
 
             foreach ($cities->toArray() as $cityData) {
@@ -108,18 +115,7 @@ class ApiManager
         $existingBrands = $this->brandsCarRepository->findAll();
 
         if (empty($existingBrands)) {
-            $brands = [
-                'ABARTH', 'AIWAYS', 'ALEKO', 'ALFA ROMEO', 'ALPINE RENAULT', 'ARO', 'ASIA', 'ASTON MARTIN', 'AUDI', 'AUSTIN',
-                'AUTOBIANCHI', 'AUVERLAND', 'BEDFORD', 'BEE BEE AUTOMOTIVE', 'BENTLEY', 'BERTONE', 'BMW', 'BUICK', 'BYD',
-                'CADILLAC', 'CHEVROLET', 'CHRYSLER', 'CITROEN', 'COURB', 'CUPRA', 'DACIA', 'DAEWOO', 'DAF', 'DAIHATSU', 'DAIMLER',
-                'DATSUN', 'DODGE', 'DS', 'EBRO', 'FERRARI', 'FEST', 'FIAT', 'FISKER', 'FORD', 'FSO-POLSKI', 'GAC GONOW', 'GME',
-                'GRANDIN', 'HONDA', 'HYUNDAI', 'INEOS', 'INFINITI', 'INNOCENTI', 'ISUZU', 'IVECO', 'JAGUAR', 'JEEP', 'KIA', 'LADA',
-                'LANCIA', 'LAND ROVER', 'LDV', 'LEAPMOTOR', 'LEXUS', 'LOTUS', 'LYNK&CO', 'MAHINDRA', 'MAN', 'MARUTI', 'MASERATI',
-                'MATRA', 'MAZDA', 'MCC', 'MEGA', 'MERCEDES', 'MG', 'MIA', 'MINI', 'MITSUBISHI', 'MPM MOTORS', 'NISSAN', 'OPEL',
-                'PANHARD', 'PEUGEOT', 'PIAGGIO', 'PONTIAC', 'PORSCHE', 'PROTON', 'RENAULT', 'ROVER', 'SAAB', 'SANTANA', 'SEAT',
-                'SERES DFSK', 'SKODA', 'SMART', 'SSANGYONG', 'SUBARU', 'SUNBEAM', 'SUZUKI', 'TALBOT', 'TATA', 'TESLA', 'THINK',
-                'TOYOTA', 'TRIUMPH', 'UMM', 'VINFAST', 'VOLKSWAGEN', 'VOLVO', 'ZASTAVA', 'ZAZ',
-            ];
+            $brands = $this->getAllBrands();
 
             foreach ($brands as $brand) {
                 $newBrand = new BrandsCar();
@@ -128,7 +124,37 @@ class ApiManager
                 $this->entityManager->persist($newBrand);
             }
             $this->entityManager->flush();
+        }
 
+        return $this->brandsCarRepository->findAll();
+    }
+
+    public function getAllModels(): array
+    {
+        $existingCars = $this->brandsCarRepository->findAll();
+
+        if (empty($existingCars)) {
+            $cars = $this->getAllModels();
+
+            foreach ($cars as $car) {
+                $brand = $this->brandsCarRepository->findOneBy(['name' => $car['brand']]);
+                if (!$brand) {
+                    $brand = new BrandsCar();
+                    $brand->setName($car['brand']);
+                    $this->entityManager->persist($brand);
+                }
+                foreach ($car['model'] as $model) {
+                    $modelCar = $this->modelsCarRepository->findOneBy(['name' => $model]);
+                    if (!$modelCar) {
+                        $modelCar = new ModelsCar();
+                        $modelCar->setName($model);
+                        $modelCar->setBrand($brand);
+                        $this->entityManager->persist($modelCar);
+                    }
+                }
+            }
+
+            $this->entityManager->flush();
         }
 
         return $this->brandsCarRepository->findAll();

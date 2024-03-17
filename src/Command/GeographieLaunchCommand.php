@@ -34,6 +34,7 @@ class GeographieLaunchCommand extends Command
         $regions = $this->apiManager->getRegions();
         $departments = $this->apiManager->getDepartements();
         $brands = $this->apiManager->getAllBrandCars();
+        $models = $this->apiManager->getAllModels();
 
         $output->writeln('Regions and departments data imported successfully.');
 
