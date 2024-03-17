@@ -35,6 +35,10 @@ class Car extends AbstractEntity
     #[ORM\Column(length: 255)]
     private ?string $img = null;
 
+    #[ORM\ManyToOne(inversedBy: 'cars')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?BrandsCar $brand = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +124,18 @@ class Car extends AbstractEntity
     public function setImg(string $img): static
     {
         $this->img = $img;
+
+        return $this;
+    }
+
+    public function getBrand(): ?BrandsCar
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(?BrandsCar $brand): static
+    {
+        $this->brand = $brand;
 
         return $this;
     }
