@@ -4,7 +4,7 @@ namespace App\Trait;
 
 trait CarsTrait
 {
-    public function getAllBrands() : array
+    public function getAllBrands(): array
     {
         return [
             'ABARTH', 'AIWAYS', 'ALEKO', 'ALFA ROMEO', 'ALPINE RENAULT', 'ARO', 'ASIA', 'ASTON MARTIN', 'AUDI', 'AUSTIN',
@@ -104,15 +104,9 @@ trait CarsTrait
             ['brand' => 'PONTIAC', 'model' => ['6000', 'Aztek', 'Bonneville', 'Catalina', 'Fiero', 'Firebird', 'G3', 'G4', 'G5', 'G6', 'G8', 'Grand Am', 'Grand Prix', 'GTO', 'LeMans', 'Montana', 'Phoenix', 'Solstice', 'Sunbird', 'Sunfire', 'T1000', 'Tempest', 'Torrent', 'Trans Sport', 'Vibe']],
             ['brand' => 'PORSCHE', 'model' => ['356', '550', '718', '911', '912', '914', '918', '924', '928', '930', '944', '959', '964', '968', 'Boxster', 'Carrera GT', 'Cayenne', 'Cayman', 'Macan', 'Panamera', 'Taycan']],
             ['brand' => 'PROTON', 'model' => ['Arena', 'EMAS', 'Ertiga', 'Gen-2', 'Inspira', 'Iriz', 'Jumbuck', 'Perdana', 'Persona', 'Preve', 'Putra', 'Saga', 'Satria', 'Savvy', 'Suprima S', 'Waja', 'Wira']],
-            ['brand' => 'RENAULT', 'model' => ['4CV', 'Alaskan', 'Arkana', 'Avantime', 'Captur', 'Clio', 'Dokker', 'Duster', 'Espace', 'Floride', 'Fuego', 'Grand Espace', 'Grand Modus', 'Grand Scénic', 'Kadjar', 'Kangoo', 'Kaptur', 'Koleos', 'KWID', 'Laguna', 'Latitude', 'Lodgy', 'Logan', 'Master', 'Maxity', 'Mégane', 'Modus', 'Primer', 'Pulse', 'Rapid', 'Rodeo', 'Safrane', 'Samsung SM3', 'Samsung SM5', 'Samsung SM7', 'Sandero', 'Savanna', 'Scénic', 'Sport Spider', 'Supercinq', 'Symbol', 'Talisman', 'Thalia', 'Trafic', 'Twingo', 'Twizy', 'Vel Satis', 'Wind', 'ZOE']],
-            ['brand' => 'RELIANT', 'model' => ['Fox', 'Kitten', 'Regal', 'Rialto', 'Robin', 'Scimitar', 'Super Robin']],
             ['brand' => 'RENAULT', 'model' => ['Alaskan', 'Arkana', 'Avantime', 'Captur', 'Clio', 'Dokker', 'Duster', 'Espace', 'Floride', 'Fuego', 'Grand Espace', 'Grand Modus', 'Grand Scénic', 'Kadjar', 'Kangoo', 'Kaptur', 'Koleos', 'KWID', 'Laguna', 'Latitude', 'Lodgy', 'Logan', 'Master', 'Maxity', 'Mégane', 'Modus', 'Primer', 'Pulse', 'Rapid', 'Rodeo', 'Safrane', 'Samsung SM3', 'Samsung SM5', 'Samsung SM7', 'Sandero', 'Savanna', 'Scénic', 'Sport Spider', 'Supercinq', 'Symbol', 'Talisman', 'Thalia', 'Trafic', 'Twingo', 'Twizy', 'Vel Satis', 'Wind', 'ZOE']],
-            ['brand' => 'RIMAC', 'model' => ['C Two']],
-            ['brand' => 'ROLLS-ROYCE', 'model' => ['Cullinan', 'Dawn', 'Ghost', 'Phantom', 'Silver Cloud', 'Silver Dawn', 'Silver Seraph', 'Silver Shadow', 'Silver Spirit', 'Silver Spur', 'Wraith']],
             ['brand' => 'ROVER', 'model' => ['100', '200', '25', '400', '45', '600', '75', '800', 'CityRover', 'Metro', 'Mini', 'Montego', 'SD1', 'Streetwise']],
             ['brand' => 'SAAB', 'model' => ['9-2X', '9-3', '9-4X', '9-5', '9-7X', '90', '900', '9000', '92', '93', '95', '96', '99']],
-            ['brand' => 'SAIPA', 'model' => ['Saba', 'X100']],
-            ['brand' => 'SALEEN', 'model' => ['S7']],
             ['brand' => 'SANTANA', 'model' => ['300', 'Aníbal', 'Ligero', 'PS-10']],
             ['brand' => 'SEAT', 'model' => ['124', '127', '131', '132', '133', '1400', '1430', '1500', '600', '850', 'Alhambra', 'Altea', 'Arona', 'Arosa', 'Ateca', 'Córdoba', 'Exeo', 'Fura', 'Ibiza', 'Inca', 'León', 'Malaga', 'Marbella', 'Mii', 'Panda', 'Ritmo', 'Tarraco', 'Toledo']],
             ['brand' => 'SKODA', 'model' => ['1000 MB', '105', '120', '130', 'Citigo', 'Enyaq', 'Fabia', 'Favorit', 'Felicia', 'Kamiq', 'Karoq', 'Kodiaq', 'Octavia', 'Popular', 'Rapid', 'Roomster', 'Scala', 'Superb', 'Yeti']],
@@ -124,17 +118,8 @@ trait CarsTrait
             ['brand' => 'TATA', 'model' => ['Ace', 'Aria', 'Bolt', 'Estate', 'Harrier', 'Indica', 'Indigo', 'Manza', 'Nano', 'Nexon', 'Safari', 'Sierra', 'Sumo', 'Tiago', 'Tigor', 'Winger', 'Xenon', 'Yodha', 'Zest']],
             ['brand' => 'TESLA', 'model' => ['Cybertruck', 'Model 3', 'Model S', 'Model X', 'Model Y', 'Roadster']],
             ['brand' => 'TOYOTA', 'model' => ['4Runner', '86', 'Aurion', 'Avalon', 'Avanza', 'Avensis', 'Aygo', 'bB', 'Belta', 'Blade', 'C-HR', 'Camry', 'Carina', 'Celica', 'Century', 'Coaster', 'Comfort', 'Corolla', 'Crown', 'Curren', 'Cynos', 'Duet', 'Echo', 'Esquire', 'Estima', 'Etios', 'FJ Cruiser', 'Fortuner', 'Granvia', 'GT86', 'Harrier', 'Hiace', 'Highlander', 'Hilux', 'Innova', 'Ipsum', 'IQ', 'ist', 'Kluger', 'Land Cruiser', 'LiteAce', 'Mark II', 'Matrix', 'Mirai', 'MR2', 'Passo', 'Picnic', 'Platz', 'Porte', 'Previa', 'Prius', 'Probox', 'Progres', 'Ractis', 'Raum', 'Rav4', 'RegiusAce', 'Roomy', 'Rush', 'Sai', 'Scepter', 'Sequoia', 'Sienna', 'Sienta', 'Soarer', 'Succeed', 'Supra', 'Tacoma', 'Tercel', 'TownAce', 'Tundra', 'Urban Cruiser', 'Vanguard', 'Vellfire', 'Venza', 'Verso', 'Vios', 'Vista', 'Vitz', 'Voxy', 'Wish', 'Yaris']],
-            ['brand' => 'TVR', 'model' => ['1600M', '2500M', '3000M', '350', '350i', '390', '400', '420', '420 SEAC', '450 SEAC', '5000M', 'Cerbera', 'Chimaera', 'Griffith', 'S', 'S2', 'S3', 'S4', 'Sagaris', 'T350', 'T440', 'Taimar', 'Tasmin', 'Tuscan', 'V8']],
-            ['brand' => 'VAUXHALL', 'model' => ['Adam', 'Agila', 'Ampera', 'Antara', 'Astra', 'Cavalier', 'Chevette', 'Combo', 'Corsa', 'Crossland X', 'Firenza', 'Frontera', 'Grandland X', 'Insignia', 'Karl', 'Manta', 'Meriva', 'Monaro', 'Monterey', 'Movano', 'Nova', 'Omega', 'Senator', 'Signum', 'Sintra', 'Speedster', 'Tigra', 'Vectra', 'Viva', 'Vivaro', 'VXR8', 'Zafira']],
             ['brand' => 'VOLKSWAGEN', 'model' => ['181', 'Amarok', 'Arteon', 'Beetle', 'Bora', 'Buggy', 'Caddy', 'Caravelle', 'CC', 'Corrado', 'Crafter', 'Derby', 'Eos', 'Fox', 'Golf', 'I.D.', 'ID.3', 'ID.4', 'Jetta', 'Karmann Ghia', 'Lavida', 'LT', 'Lupo', 'Multivan', 'Parati', 'Passat', 'Phaeton', 'Pointer', 'Polo', 'Rabbit', 'Routan', 'Santana', 'Saveiro', 'Scirocco', 'Sharan', 'T-Cross', 'T-Roc', 'Taro', 'Tiguan', 'Touareg', 'Touran', 'Transporter', 'Up!', 'Vento']],
             ['brand' => 'VOLVO', 'model' => ['120', '140', '144', '145', '164', '240', '242', '244', '245', '260', '264', '265', '340', '360', '440', '460', '480', '66', '740', '760', '780', '850', '940', '960', 'C30', 'C70', 'P120', 'P1800', 'P1900', 'P220', 'P544', 'P445', 'S40', 'S60', 'S70', 'S80', 'S90', 'V40', 'V50', 'V60', 'V70', 'V90', 'XC40', 'XC60', 'XC70', 'XC90']],
-            ['brand' => 'WARTBURG', 'model' => ['353', '353W', '1.3', '1.3W']],
-            ['brand' => 'WESTFIELD', 'model' => ['SE', 'SEi', 'SEiW', 'SEiG']],
-            ['brand' => 'WIESMANN', 'model' => ['GT', 'Roadster', 'Spyder']],
-            ['brand' => 'ZASTAVA', 'model' => ['750', '101', '750', 'Skala', 'Yugo 45']],
-            ['brand' => 'ZENVO', 'model' => ['ST1']],
-            ['brand' => 'ZOTYE', 'model' => ['Z100', 'Z300', 'Z500', 'Z560', 'Z700', 'Z700SUV', 'Z700T']],
-            ['brand' => 'ZX AUTO', 'model' => ['GrandTiger', 'Landmark']],
         ];
     }
 }
