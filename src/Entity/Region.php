@@ -29,10 +29,14 @@ class Region extends AbstractEntity
     #[ORM\OneToMany(targetEntity: City::class, mappedBy: 'codeRegion')]
     private Collection $cities;
 
+    #[ORM\OneToMany(targetEntity: Car::class, mappedBy: 'region', orphanRemoval: true)]
+    private Collection $cars;
+
     public function __construct()
     {
         $this->departements = new ArrayCollection();
         $this->cities = new ArrayCollection();
+        $this->cars = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -118,6 +122,36 @@ class Region extends AbstractEntity
             // set the owning side to null (unless already changed)
             if ($city->getCodeRegion() === $this) {
                 $city->setCodeRegion(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Car>
+     */
+    public function getCars(): Collection
+    {
+        return $this->cars;
+    }
+
+    public function addCar(Car $car): static
+    {
+        if (!$this->cars->contains($car)) {
+            $this->cars->add($car);
+            $car->setRegion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCar(Car $car): static
+    {
+        if ($this->cars->removeElement($car)) {
+            // set the owning side to null (unless already changed)
+            if ($car->getRegion() === $this) {
+                $car->setRegion(null);
             }
         }
 

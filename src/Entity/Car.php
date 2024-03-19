@@ -40,6 +40,14 @@ class Car extends AbstractEntity
     #[ORM\JoinColumn(nullable: false)]
     private ?ModelsCar $carModel = null;
 
+    #[ORM\ManyToOne(inversedBy: 'cars')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Region $region = null;
+
+    #[ORM\ManyToOne(inversedBy: 'cars')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Departement $departement = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,6 +145,30 @@ class Car extends AbstractEntity
     public function setCarModel(?ModelsCar $carModel): static
     {
         $this->carModel = $carModel;
+
+        return $this;
+    }
+
+    public function getRegion(): ?Region
+    {
+        return $this->region;
+    }
+
+    public function setRegion(?Region $region): static
+    {
+        $this->region = $region;
+
+        return $this;
+    }
+
+    public function getDepartement(): ?Departement
+    {
+        return $this->departement;
+    }
+
+    public function setDepartement(?Departement $departement): static
+    {
+        $this->departement = $departement;
 
         return $this;
     }
