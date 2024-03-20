@@ -45,4 +45,14 @@ class RegionRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findRegionByName(string $name)
+    {
+        return $this->createQueryBuilder('r')
+            ->select('r.name')
+            ->where('r.name = :name')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->getResult();
+    }
 }

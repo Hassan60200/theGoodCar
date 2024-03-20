@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Car;
 use App\Form\CarType;
 use App\Repository\CarRepository;
+use App\Repository\RegionRepository;
 use App\Services\ApiManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +16,10 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/car')]
 class CarController extends AbstractController
 {
+    public function __construct()
+    {
+    }
+
     #[Route('/', name: 'app_car_index', methods: ['GET'])]
     public function index(CarRepository $carRepository, ApiManager $apiManager): Response
     {
@@ -72,11 +77,19 @@ class CarController extends AbstractController
     #[Route('/{id}', name: 'app_car_delete', methods: ['POST'])]
     public function delete(Request $request, Car $car, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$car->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $car->getId(), $request->request->get('_token'))) {
             $entityManager->remove($car);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_car_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/autocomplete/regions', name: 'app_car_autocomplete_regions', methods: ['GET'])]
+    public function autocompleteRegions(RegionRepository $regionRepository, Request $request): \Symfony\Component\HttpFoundation\JsonResponse
+    {
+        $region = $regionRepository->findRegionByName($request->query->get('name'));
+
+        return $this->json($region);
     }
 }
