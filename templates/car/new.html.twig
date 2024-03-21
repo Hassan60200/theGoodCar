@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Car{% endblock %}
+{% block title %}Ajout d'une voiture{% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div class="container" {{ stimulus_controller('autocomplete-region', {url: path('app_car_autocomplete_regions')}) }}>
         <h1 class="text-center my-5">Ajouter une voiture</h1>
-        <div data-controller="autocomplete-region" class="card p-5">
+        <div class="card p-5">
 
             {{ form_start(form) }}
             <div class="row">
@@ -65,13 +65,13 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        {{ form_label(form.yearOfManufacture) }}
-                        {{ form_widget(form.yearOfManufacture, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_label(form.years) }}
+                        {{ form_widget(form.years, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-12">
                     <div class="form-group">
                         {{ form_label(form.img) }}
                         {{ form_widget(form.img, {'attr': {'class': 'form-control'}}) }}

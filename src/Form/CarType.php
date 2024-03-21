@@ -7,7 +7,6 @@ use App\Entity\Car;
 use App\Entity\Departement;
 use App\Entity\ModelsCar;
 use App\Entity\Region;
-use PHPStan\Type\IntegerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -45,8 +44,9 @@ class CarType extends AbstractType
                 'choice_label' => 'name',
                 'label' => 'Modèle de la voiture',
             ])
-            ->add('yearOfManufacture', TextType::class, [
+            ->add('years', NumberType::class, [
                 'label' => 'Année de fabrication',
+                'mapped' => false,
             ])
             ->add('color', TextType::class, [
                 'label' => 'Couleur',

@@ -14,8 +14,8 @@ class Car extends AbstractEntity
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $yearOfManufacture = null;
+    #[ORM\Column]
+    private ?int $yearOfManufacture = null;
 
     #[ORM\Column(length: 15)]
     private ?string $color = null;
@@ -53,16 +53,14 @@ class Car extends AbstractEntity
         return $this->id;
     }
 
-    public function getYearOfManufacture(): ?\DateTimeInterface
+    public function getYearOfManufacture(): ?int
     {
         return $this->yearOfManufacture;
     }
 
-    public function setYearOfManufacture(\DateTimeInterface $yearOfManufacture): static
+    public function setYearOfManufacture(?int $yearOfManufacture): void
     {
         $this->yearOfManufacture = $yearOfManufacture;
-
-        return $this;
     }
 
     public function getColor(): ?string

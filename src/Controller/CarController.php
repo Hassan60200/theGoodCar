@@ -36,6 +36,8 @@ class CarController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $year = $form->get('years')->getData();
+            $car->setYearOfManufacture($year);
             $entityManager->persist($car);
             $entityManager->flush();
 
@@ -77,7 +79,7 @@ class CarController extends AbstractController
     #[Route('/{id}', name: 'app_car_delete', methods: ['POST'])]
     public function delete(Request $request, Car $car, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $car->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$car->getId(), $request->request->get('_token'))) {
             $entityManager->remove($car);
             $entityManager->flush();
         }
