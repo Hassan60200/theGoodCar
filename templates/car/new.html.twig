@@ -3,7 +3,7 @@
 {% block title %}Ajout d'une voiture{% endblock %}
 
 {% block body %}
-    <div class="container" {{ stimulus_controller('autocomplete-region', {url: path('app_car_autocomplete_regions')}) }}>
+    <div class="container" {{ stimulus_controller('autocomplete-model', {url: path('app_car_autocomplete_model')}) }}>
         <h1 class="text-center my-5">Ajouter une voiture</h1>
         <div class="card p-5">
 
@@ -17,8 +17,13 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        {{ form_label(form.carModel) }}
-                        {{ form_widget(form.carModel, {'attr': {'class': 'form-control'}}) }}
+                        {# {{ form_label(form.carModel) }}
+                        {{ form_widget(form.carModel, {'attr': {'class': 'form-control'}}) }} #}
+                        <input placeholder="Search products..."
+                               type="search"
+                               class="form-control"
+                               data-action="autocomplete-model#onSearchInput"
+                        >
                     </div>
                 </div>
             </div>

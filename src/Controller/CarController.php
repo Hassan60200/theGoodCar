@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Car;
 use App\Form\CarType;
 use App\Repository\CarRepository;
+use App\Repository\ModelsCarRepository;
 use App\Repository\RegionRepository;
 use App\Services\ApiManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -87,11 +88,11 @@ class CarController extends AbstractController
         return $this->redirectToRoute('app_car_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/autocomplete/regions', name: 'app_car_autocomplete_regions', methods: ['GET'])]
-    public function autocompleteRegions(RegionRepository $regionRepository, Request $request): \Symfony\Component\HttpFoundation\JsonResponse
+    #[Route('/autocomplete/model', name: 'app_car_autocomplete_model', methods: ['GET'])]
+    public function autocompleteModel(ModelsCarRepository $modelsCarRepository, Request $request): \Symfony\Component\HttpFoundation\JsonResponse
     {
-        $region = $regionRepository->findRegionByName($request->query->get('name'));
+        $model = $modelsCarRepository->findByBrand($request->query->get('id'));
 
-        return $this->json($region);
+        return $this->json($model, 200);
     }
 }

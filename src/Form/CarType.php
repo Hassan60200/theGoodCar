@@ -47,11 +47,11 @@ class CarType extends AbstractType
                 'choice_label' => 'name',
                 'label' => 'Département de la voiture',
             ])
-            ->add('carModel', EntityType::class, [
+            /*->add('carModel', EntityType::class, [
                 'class' => ModelsCar::class,
                 'choice_label' => 'name',
                 'label' => 'Modèle de la voiture',
-            ])
+            ])*/
             ->add('years', NumberType::class, [
                 'label' => 'Année de fabrication',
                 'mapped' => false,

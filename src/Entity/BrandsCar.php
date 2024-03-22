@@ -6,8 +6,10 @@ use App\Repository\BrandsCarRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: BrandsCarRepository::class)]
+#[UniqueEntity(fields: ['name'], message: 'There is already a brand with this name')]
 class BrandsCar extends AbstractEntity
 {
     #[ORM\Id]
@@ -15,7 +17,7 @@ class BrandsCar extends AbstractEntity
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 25)]
+    #[ORM\Column(length: 25, unique: true)]
     private ?string $name = null;
 
     #[ORM\OneToMany(targetEntity: Car::class, mappedBy: 'brand', orphanRemoval: true)]
@@ -23,6 +25,9 @@ class BrandsCar extends AbstractEntity
 
     #[ORM\OneToMany(targetEntity: ModelsCar::class, mappedBy: 'brand', orphanRemoval: true)]
     private Collection $modelsCars;
+
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
 
     public function __construct()
     {
@@ -103,6 +108,18 @@ class BrandsCar extends AbstractEntity
                 $modelsCar->setBrand(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
 
         return $this;
     }

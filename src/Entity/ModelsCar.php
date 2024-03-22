@@ -25,6 +25,9 @@ class ModelsCar
     #[ORM\OneToMany(targetEntity: Car::class, mappedBy: 'carModel', orphanRemoval: true)]
     private Collection $cars;
 
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
+
     public function __construct()
     {
         $this->cars = new ArrayCollection();
@@ -85,6 +88,18 @@ class ModelsCar
                 $car->setCarModel(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
 
         return $this;
     }

@@ -13,7 +13,9 @@
                     <img src="{{ vich_uploader_asset(car, 'imageFile') }}" class="card-img-top" alt="test">
                     <div class="card-body">
                         <h5 class="card-title">
+                            <a href="{{ path('app_car_show', {'id': car.id}) }}">
                             {{ car.brand.name }}, {{ car.carModel.name }}
+                            </a>
                         </h5>
                     </div>
                 </div>

@@ -8,10 +8,15 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class AbstractEntity
 {
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?\DateTimeImmutable $createdAt;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {

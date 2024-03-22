@@ -45,4 +45,16 @@ class ModelsCarRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+
+    public function findByBrand($id): array
+    {
+        return $this->createQueryBuilder('m')
+            ->innerJoin('m.brand', 'b')
+            ->andWhere('b.id = :id')
+            ->setParameter('id', $id)
+            ->orderBy('m.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }
