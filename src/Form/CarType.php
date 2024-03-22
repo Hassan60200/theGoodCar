@@ -14,15 +14,23 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\UX\Dropzone\Form\DropzoneType;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class CarType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('img', DropzoneType::class, [
+            ->add('imageFile', VichImageType::class, [
                 'label' => 'Image de la voiture',
+                'help' => 'jpeg, png',
+                'required' => false,
+                'allow_delete' => true,
+                'delete_label' => 'delete',
+                'download_label' => 'download',
+                'download_uri' => true,
+                'image_uri' => true,
+                'asset_helper' => true,
             ])
             ->add('brand', EntityType::class, [
                 'class' => BrandsCar::class,

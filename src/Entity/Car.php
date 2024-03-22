@@ -3,10 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\CarRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
+#[Vich\Uploadable]
 class Car extends AbstractEntity
 {
     #[ORM\Id]
@@ -31,6 +33,9 @@ class Car extends AbstractEntity
 
     #[ORM\Column(length: 255)]
     private ?string $img = null;
+
+    #[Vich\UploadableField(mapping: 'cars_image', fileNameProperty: 'img')]
+    private ?File $imageFile = null;
 
     #[ORM\ManyToOne(inversedBy: 'cars')]
     #[ORM\JoinColumn(nullable: false)]
@@ -121,6 +126,16 @@ class Car extends AbstractEntity
         $this->img = $img;
 
         return $this;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile): void
+    {
+        $this->imageFile = $imageFile;
     }
 
     public function getBrand(): ?BrandsCar
