@@ -53,6 +53,9 @@ class Car extends AbstractEntity
     #[ORM\JoinColumn(nullable: false)]
     private ?Departement $departement = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $status = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -182,6 +185,18 @@ class Car extends AbstractEntity
     public function setDepartement(?Departement $departement): static
     {
         $this->departement = $departement;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }
