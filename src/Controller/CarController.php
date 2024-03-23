@@ -6,7 +6,6 @@ use App\Entity\Car;
 use App\Form\CarType;
 use App\Repository\CarRepository;
 use App\Repository\ModelsCarRepository;
-use App\Repository\RegionRepository;
 use App\Services\ApiManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -91,7 +90,8 @@ class CarController extends AbstractController
     #[Route('/autocomplete/model', name: 'app_car_autocomplete_model', methods: ['GET'])]
     public function autocompleteModel(ModelsCarRepository $modelsCarRepository, Request $request): \Symfony\Component\HttpFoundation\JsonResponse
     {
-        $model = $modelsCarRepository->findByBrand($request->query->get('id'));
+        $model = $modelsCarRepository->findByBrand($request->query->get('query'), $request->query->get('search'));
+        dd($model);
 
         return $this->json($model, 200);
     }

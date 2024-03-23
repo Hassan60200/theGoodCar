@@ -11,16 +11,25 @@ export default class extends Controller {
         console.log('work');
     }
 
-    static targets = ['result', 'input', 'bankSearch'];
+    static targets = ['result', 'input'];
 
 
     async onSearchInput(event) {
         const selectValue = document.getElementById('car_brand').value;
+        console.log(selectValue);
         const params = new URLSearchParams({
             query: selectValue,
+            search: event.target.value,
             preview: 1
         });
-        console.log();
+
+
+        try {
+            const response = await fetch(`${this.urlValue}?${params}`);
+            console.log(response);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
 }
