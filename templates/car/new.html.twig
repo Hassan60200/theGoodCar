@@ -20,11 +20,14 @@
                         {# {{ form_label(form.carModel) }}
                         {{ form_widget(form.carModel, {'attr': {'class': 'form-control'}}) }} } #}
                         <label> Modèle de la voiture </label>
-                            <input placeholder="Choisir le modèle de la voiture"
+                        {#  <input placeholder="Choisir le modèle de la voiture"
                                    type="search"
                                    class="form-control"
+                                   data-autocomplete-model-target="input"
                                    data-action="input->autocomplete-model#onSearchInput"
-                            >
+                            > #}
+                        {{ form_widget(form.model, {'attr': {'class': 'form-control'}}) }}
+                        <ul data-autocomplete-model-target="result"></ul>
                     </div>
                 </div>
             </div>
@@ -43,16 +46,22 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         {{ form_label(form.color) }}
                         {{ form_widget(form.color, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         {{ form_label(form.price) }}
                         {{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {{ form_label(form.status) }}
+                        {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
             </div>

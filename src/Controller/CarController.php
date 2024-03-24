@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Car;
+use App\Entity\ModelsCar;
 use App\Form\CarType;
 use App\Repository\CarRepository;
 use App\Repository\ModelsCarRepository;
@@ -16,7 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/car')]
 class CarController extends AbstractController
 {
-    public function __construct()
+    public function __construct(private readonly ModelsCarRepository $modelsCarRepository)
     {
     }
 
@@ -37,7 +38,12 @@ class CarController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $year = $form->get('years')->getData();
+            /** @var ModelsCar $model */
+            $model = $this->modelsCarRepository->findOneBy(['name' => $form->get('model')->getData()]);
+
+            $car->setCarModel($model);
             $car->setYearOfManufacture($year);
+
             $entityManager->persist($car);
             $entityManager->flush();
 
@@ -79,7 +85,7 @@ class CarController extends AbstractController
     #[Route('/{id}', name: 'app_car_delete', methods: ['POST'])]
     public function delete(Request $request, Car $car, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$car->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $car->getId(), $request->request->get('_token'))) {
             $entityManager->remove($car);
             $entityManager->flush();
         }
@@ -88,10 +94,9 @@ class CarController extends AbstractController
     }
 
     #[Route('/autocomplete/model', name: 'app_car_autocomplete_model', methods: ['GET'])]
-    public function autocompleteModel(ModelsCarRepository $modelsCarRepository, Request $request): \Symfony\Component\HttpFoundation\JsonResponse
+    public function autocompleteModel(Request $request): \Symfony\Component\HttpFoundation\JsonResponse
     {
-        $model = $modelsCarRepository->findByBrand($request->query->get('query'), $request->query->get('search'));
-        dd($model);
+        $model = $this->modelsCarRepository->findByBrand($request->query->get('query'), $request->query->get('search'));
 
         return $this->json($model, 200);
     }

@@ -18,6 +18,20 @@ use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class CarType extends AbstractType
 {
+    public function STATE(): array
+    {
+        return [
+            'En vente' => 'En vente',
+            'Vendu' => 'Vendu',
+            'Réservé' => 'Réservé',
+            'En attente' => 'En attente',
+            'En réparation' => 'En réparation',
+            'En panne' => 'En panne',
+            'Louer' => 'Louer',
+            'Inactive' => 'Inactive',
+        ];
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -52,6 +66,15 @@ class CarType extends AbstractType
                 'choice_label' => 'name',
                 'label' => 'Modèle de la voiture',
             ])*/
+            ->add('model', TextType::class, [
+                'label' => 'Modèle de la voiture',
+                'mapped' => false,
+                'attr' => [
+                    'placeholder' => 'Nom du modèle',
+                    'data-autocomplete-model-target' => 'input',
+                    'data-action ' => 'input->autocomplete-model#onSearchInput',
+                ],
+            ])
             ->add('years', NumberType::class, [
                 'label' => 'Année de fabrication',
                 'mapped' => false,
@@ -71,7 +94,12 @@ class CarType extends AbstractType
                 ],
                 'label' => 'Type de carburant',
             ])
-            ->add('mileage', TextType::class, [
+            ->add('status', ChoiceType::class, [
+                'label' => 'Statut',
+                'choices' => $this->STATE(),
+            ])
+            ->
+            add('mileage', TextType::class, [
                 'label' => 'Kilométrage',
             ]);
     }

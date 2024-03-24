@@ -8,7 +8,6 @@ export default class extends Controller {
     }
 
     connect() {
-        console.log('work');
     }
 
     static targets = ['result', 'input'];
@@ -16,7 +15,6 @@ export default class extends Controller {
 
     async onSearchInput(event) {
         const selectValue = document.getElementById('car_brand').value;
-        console.log(selectValue);
         const params = new URLSearchParams({
             query: selectValue,
             search: event.target.value,
@@ -26,9 +24,24 @@ export default class extends Controller {
 
         try {
             const response = await fetch(`${this.urlValue}?${params}`);
-            console.log(response);
-        } catch (e) {
-            console.log(e);
+            const data = await response.json();
+
+            this.resultTarget.innerHTML = '';
+
+            data.forEach(model => {
+                const li = document.createElement('li');
+                li.textContent = model.name;
+                li.setAttribute('id', model.id);
+                li.setAttribute('value', model.name);
+                li.addEventListener('click', () => {
+                    this.inputTarget.value = model.name;
+                    this.resultTarget.innerHTML = '';
+                });
+                this.resultTarget.appendChild(li);
+            });
+
+        } catch (error) {
+            console.error('Error fetching autocomplete data:', error);
         }
     }
 

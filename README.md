@@ -18,3 +18,4 @@ Création d'une application de location/ventes de voitures (PROJET FICTIF)
     5. Installez les dépendances npm avec `npm install` ou `yarn install`.
     6. Construisez les assets avec `npm run dev` ou `yarn dev`.
     7. Démarrez le serveur Symfony avec `symfony server:start`.
+    8. Ajouter les régions et les départements avec `symfony console app:geographie:launch`.
