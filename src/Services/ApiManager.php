@@ -27,7 +27,7 @@ class ApiManager
     ) {
     }
 
-    public function getRegions()
+    public function getRegions(): array
     {
         $existingRegions = $this->regionRepository->findAll();
 
@@ -77,14 +77,14 @@ class ApiManager
         return $this->departementRepository->findAll();
     }
 
-    public function getCities(string $value): array
+    public function getCities($code): array
     {
         $existingCities = $this->cityRepository->findAll();
 
         if (empty($existingCities)) {
             $cities = $this->client->request(
                 'GET',
-                'https://geo.api.gouv.fr/communes?nom='.$value
+                'https://geo.api.gouv.fr/departements/'.$code.'/communes'
             );
 
             foreach ($cities->toArray() as $cityData) {
@@ -97,7 +97,10 @@ class ApiManager
                     ->setCodeRegion($region)
                     ->setCode(intval($cityData['code']))
                     ->setZipCode($cityData['codesPostaux'][0]);
+
+                $this->entityManager->persist($city);
             }
+            $this->entityManager->flush();
         }
 
         return $this->cityRepository->findAll();

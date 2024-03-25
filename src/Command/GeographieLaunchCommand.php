@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Repository\DepartementRepository;
 use App\Services\ApiManager;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -16,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class GeographieLaunchCommand extends Command
 {
-    public function __construct(private readonly ApiManager $apiManager)
+    public function __construct(private readonly ApiManager $apiManager, private readonly DepartementRepository $departementRepository)
     {
         parent::__construct();
     }
@@ -31,11 +32,15 @@ class GeographieLaunchCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $regions = $this->apiManager->getRegions();
-        $departments = $this->apiManager->getDepartements();
+        /* $regions = $this->apiManager->getRegions();
+         $departments = $this->apiManager->getDepartements();*/
+        $departments = $this->departementRepository->findAll();
+        foreach ($departments as $department) {
+            $cities = $this->apiManager->getCities($department->getCode());
+            echo 'Département au code : '.$department->getCode().' ajouté';
+        }
 
-
-        $output->writeln('Regions and departments data imported successfully.');
+        $output->writeln('Regions, departments and cities data imported successfully.');
 
         return Command::SUCCESS;
     }

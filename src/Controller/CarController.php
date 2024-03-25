@@ -7,8 +7,8 @@ use App\Entity\ModelsCar;
 use App\Form\CarType;
 use App\Repository\CarRepository;
 use App\Repository\ModelsCarRepository;
-use App\Services\ApiManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,10 +22,16 @@ class CarController extends AbstractController
     }
 
     #[Route('/', name: 'app_car_index', methods: ['GET'])]
-    public function index(CarRepository $carRepository, ApiManager $apiManager): Response
+    public function index(CarRepository $carRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        $cars = $paginator->paginate(
+            $carRepository->findAll(),
+            $request->query->getInt('page', 1),
+            10
+        );
+
         return $this->render('car/index.html.twig', [
-            'cars' => $carRepository->findAll(),
+            'cars' => $cars,
         ]);
     }
 
@@ -85,7 +91,7 @@ class CarController extends AbstractController
     #[Route('/{id}', name: 'app_car_delete', methods: ['POST'])]
     public function delete(Request $request, Car $car, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $car->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$car->getId(), $request->request->get('_token'))) {
             $entityManager->remove($car);
             $entityManager->flush();
         }
