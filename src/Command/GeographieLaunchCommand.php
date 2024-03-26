@@ -32,13 +32,16 @@ class GeographieLaunchCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /* $regions = $this->apiManager->getRegions();
-         $departments = $this->apiManager->getDepartements();*/
-        $departments = $this->departementRepository->findAll();
+        $regions = $this->apiManager->getRegions();
+        $departments = $this->apiManager->getDepartements();
+        $code = [];
         foreach ($departments as $department) {
-            $cities = $this->apiManager->getCities($department->getCode());
-            echo 'Département au code : '.$department->getCode().' ajouté';
+            $code[] = $department->getCode();
         }
+        foreach ($code as $codeDepartment) {
+            $cities = $this->apiManager->getCities($codeDepartment);
+        }
+
 
         $output->writeln('Regions, departments and cities data imported successfully.');
 

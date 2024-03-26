@@ -10,6 +10,7 @@ use App\Repository\DepartementRepository;
 use App\Repository\RegionRepository;
 use App\Trait\CarsTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ApiManager
@@ -77,32 +78,28 @@ class ApiManager
         return $this->departementRepository->findAll();
     }
 
-    public function getCities($code): array
+    public function getCities($code): JsonResponse
     {
-        $existingCities = $this->cityRepository->findAll();
+        $cities = $this->client->request(
+            'GET',
+            'https://geo.api.gouv.fr/departements/'.$code.'/communes'
+        );
 
-        if (empty($existingCities)) {
-            $cities = $this->client->request(
-                'GET',
-                'https://geo.api.gouv.fr/departements/'.$code.'/communes'
-            );
+        foreach ($cities->toArray() as $cityData) {
+            $region = $this->regionRepository->findOneBy(['code' => $cityData['codeRegion']]);
+            $departement = $this->departementRepository->findOneBy(['code' => $cityData['codeDepartement']]);
 
-            foreach ($cities->toArray() as $cityData) {
-                $region = $this->regionRepository->findOneBy(['code' => $cityData['codeRegion']]);
-                $departement = $this->departementRepository->findOneBy(['code' => $cityData['codeDepartement']]);
+            $city = new City();
+            $city->setName($cityData['nom'])
+                ->setCodeDepartement($departement)
+                ->setCodeRegion($region)
+                ->setCode(intval($cityData['code']))
+                ->setZipCode($cityData['codesPostaux'][0]);
 
-                $city = new City();
-                $city->setName($cityData['nom'])
-                    ->setCodeDepartement($departement)
-                    ->setCodeRegion($region)
-                    ->setCode(intval($cityData['code']))
-                    ->setZipCode($cityData['codesPostaux'][0]);
-
-                $this->entityManager->persist($city);
-            }
-            $this->entityManager->flush();
+            $this->entityManager->persist($city);
         }
+        $this->entityManager->flush();
 
-        return $this->cityRepository->findAll();
+        return new JsonResponse(['message' => 'Cities imported successfully.'], 200);
     }
 }
