@@ -3,7 +3,7 @@
 {% block title %}Ajout d'une voiture{% endblock %}
 
 {% block body %}
-    <div class="container" {{ stimulus_controller('autocomplete-model', {url: path('app_car_autocomplete_model')}) }}>
+    <div class="container" {{ stimulus_controller('autocomplete', {url: path('app_car_autocomplete_model')}) }}>
         <h1 class="text-center my-5">Ajouter une voiture</h1>
         <div class="card p-5">
 
@@ -17,17 +17,9 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        {# {{ form_label(form.carModel) }}
-                        {{ form_widget(form.carModel, {'attr': {'class': 'form-control'}}) }} } #}
                         <label> Modèle de la voiture </label>
-                        {#  <input placeholder="Choisir le modèle de la voiture"
-                                   type="search"
-                                   class="form-control"
-                                   data-autocomplete-model-target="input"
-                                   data-action="input->autocomplete-model#onSearchInput"
-                            > #}
                         {{ form_widget(form.model, {'attr': {'class': 'form-control'}}) }}
-                        <ul data-autocomplete-model-target="result"></ul>
+                        <ul data-autocomplete-target="result"></ul>
                     </div>
                 </div>
             </div>
@@ -38,10 +30,11 @@
                         {{ form_widget(form.region, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6" {{ stimulus_controller('autocomplete', {url: path('app_car_autocomplete_departement')}) }}>
                     <div class="form-group">
                         {{ form_label(form.departement) }}
                         {{ form_widget(form.departement, {'attr': {'class': 'form-control'}}) }}
+                        <ul data-autocomplete-target="resultDep"></ul>
                     </div>
                 </div>
             </div>

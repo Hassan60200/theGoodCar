@@ -56,10 +56,13 @@ class CarType extends AbstractType
                 'choice_label' => 'name',
                 'label' => 'Région de la voiture',
             ])
-            ->add('departement', EntityType::class, [
-                'class' => Departement::class,
-                'choice_label' => 'name',
+            ->add('departement', TextType::class, [
                 'label' => 'Département de la voiture',
+                'attr' => [
+                    'placeholder' => 'Nom du département',
+                    'data-autocomplete-target' => 'inputDep',
+                    'data-action ' => 'input->autocomplete#onSearchInputDepartement',
+                ],
             ])
             /*->add('carModel', EntityType::class, [
                 'class' => ModelsCar::class,
@@ -71,8 +74,8 @@ class CarType extends AbstractType
                 'mapped' => false,
                 'attr' => [
                     'placeholder' => 'Nom du modèle',
-                    'data-autocomplete-model-target' => 'input',
-                    'data-action ' => 'input->autocomplete-model#onSearchInput',
+                    'data-autocomplete-target' => 'input',
+                    'data-action ' => 'input->autocomplete#onSearchInputModel',
                 ],
             ])
             ->add('years', NumberType::class, [

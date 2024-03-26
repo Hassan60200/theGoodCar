@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Departement;
+use App\Entity\Region;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -45,4 +46,15 @@ class DepartementRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findDepartementByCode($region): array
+    {
+        return $this->createQueryBuilder('d')
+            ->innerJoin('d.region', 'r')
+            ->andWhere('d.region = :region')
+            ->setParameter('region', $region)
+            ->getQuery()
+            ->getArrayResult()
+        ;
+    }
 }

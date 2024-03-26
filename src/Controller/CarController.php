@@ -6,6 +6,7 @@ use App\Entity\Car;
 use App\Entity\ModelsCar;
 use App\Form\CarType;
 use App\Repository\CarRepository;
+use App\Repository\DepartementRepository;
 use App\Repository\ModelsCarRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -17,7 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/car')]
 class CarController extends AbstractController
 {
-    public function __construct(private readonly ModelsCarRepository $modelsCarRepository)
+    public function __construct(private readonly ModelsCarRepository $modelsCarRepository, private readonly DepartementRepository $departementRepository)
     {
     }
 
@@ -46,8 +47,10 @@ class CarController extends AbstractController
             $year = $form->get('years')->getData();
             /** @var ModelsCar $model */
             $model = $this->modelsCarRepository->findOneBy(['name' => $form->get('model')->getData()]);
+            $departement = $this->departementRepository->findOneBy(['name' => $form->get('departement')->getData()]);
 
             $car->setCarModel($model);
+            $car->setDepartement($departement);
             $car->setYearOfManufacture($year);
 
             $entityManager->persist($car);
@@ -91,7 +94,7 @@ class CarController extends AbstractController
     #[Route('/{id}', name: 'app_car_delete', methods: ['POST'])]
     public function delete(Request $request, Car $car, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$car->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $car->getId(), $request->request->get('_token'))) {
             $entityManager->remove($car);
             $entityManager->flush();
         }
@@ -105,5 +108,13 @@ class CarController extends AbstractController
         $model = $this->modelsCarRepository->findByBrand($request->query->get('query'), $request->query->get('search'));
 
         return $this->json($model, 200);
+    }
+
+    #[Route('/autocomplete/departement', name: 'app_car_autocomplete_departement', methods: ['GET'])]
+    public function autocompleteDepartement(Request $request): \Symfony\Component\HttpFoundation\JsonResponse
+    {
+        $departements = $this->departementRepository->findDepartementByCode($request->query->get('query'));
+
+        return $this->json($departements, 200);
     }
 }
