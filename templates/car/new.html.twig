@@ -23,18 +23,24 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6">
+            <div class="row" {{ stimulus_controller('autocomplete', {url: path('app_car_autocomplete_departement')}) }}>
+                <div class="col-md-4">
                     <div class="form-group">
                         {{ form_label(form.region) }}
                         {{ form_widget(form.region, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
-                <div class="col-md-6" {{ stimulus_controller('autocomplete', {url: path('app_car_autocomplete_departement')}) }}>
+                <div class="col-md-4" >
                     <div class="form-group">
-                        {{ form_label(form.departement) }}
-                        {{ form_widget(form.departement, {'attr': {'class': 'form-control'}}) }}
-                        <ul data-autocomplete-target="resultDep"></ul>
+                        <label>Département de la voiture</label>
+                        <select class="form-control" name="departement" id="car_departement" data-autocomplete-target="resultDep"></select>
+                    </div>
+                </div>
+                <div class="col-md-4" {{ stimulus_controller('autocomplete', {url: path('app_car_autocomplete_city')}) }}>
+                    <div class="form-group">
+                        {{ form_label(form.city) }}
+                        {{ form_widget(form.city, {'attr': {'class': 'form-control'}}) }}
+                        <ul data-autocomplete-target="resultCity"></ul>
                     </div>
                 </div>
             </div>

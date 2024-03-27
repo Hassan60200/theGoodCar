@@ -45,4 +45,17 @@ class CityRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findCityByDepartement($departement, string $search): array
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.codeDepartement', 'd')
+            ->andWhere('c.codeDepartement = :departement')
+            ->andWhere('c.name LIKE :search')
+            ->setParameter('departement', $departement)
+            ->setParameter('search', '%'.$search.'%')
+            ->getQuery()
+            ->getArrayResult()
+        ;
+    }
 }

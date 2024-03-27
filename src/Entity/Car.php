@@ -56,6 +56,10 @@ class Car extends AbstractEntity
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
+    #[ORM\ManyToOne(inversedBy: 'cars')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?City $city = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -197,6 +201,18 @@ class Car extends AbstractEntity
     public function setStatus(string $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCity(): ?City
+    {
+        return $this->city;
+    }
+
+    public function setCity(?City $city): static
+    {
+        $this->city = $city;
 
         return $this;
     }

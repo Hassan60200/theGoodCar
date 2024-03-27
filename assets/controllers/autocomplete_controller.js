@@ -10,7 +10,7 @@ export default class extends Controller {
     connect() {
     }
 
-    static targets = ['result', 'input', 'inputDep', 'resultDep'];
+    static targets = ['result', 'input', 'inputDep', 'resultDep', 'inputCity', 'resultCity'];
 
 
     async onSearchInputModel(event) {
@@ -55,19 +55,50 @@ export default class extends Controller {
         });
 
         try {
-            const response = await fetch(`${this.urlValue}?${params}`);
-            const data = await response.json();
-            data.forEach(departement => {
-                const li = document.createElement('li');
-                li.textContent = departement.name;
-                li.setAttribute('id', departement.id);
-                li.setAttribute('value', departement.name);
-                li.addEventListener('click', () => {
-                    this.inputDepTarget.value = departement.name;
-                    this.resultDepTarget.innerHTML = '';
+            document.getElementById('car_region').addEventListener('change', async () => {
+                const response = await fetch(`${this.urlValue}?${params}`);
+                const data = await response.json();
+                data.forEach(departement => {
+                    const option = document.createElement('option');
+                    option.textContent = departement.name;
+                    option.setAttribute('id', departement.id);
+                    option.setAttribute('value', departement.name);
+                    option.addEventListener('click', () => {
+                        this.inputDepTarget.value = departement.name;
+                        this.resultDepTarget.innerHTML = '';
+                    });
+                    this.resultDepTarget.appendChild(option);
                 });
-                this.resultDepTarget.appendChild(li);
             });
+
+        } catch (error) {
+            console.error('Error fetching autocomplete data:', error);
+        }
+    }
+
+    async onSearchInputCity(event) {
+        const selectValue = document.getElementById('car_departement').value;
+        const params = new URLSearchParams({
+            query: selectValue,
+            search: event.target.value,
+            preview: 1
+        });
+        try {
+            if (event.target.value.length >= 4) {
+                const response = await fetch(`${this.urlValue}?${params}`);
+                const data = await response.json();
+                data.forEach(city => {
+                    const option = document.createElement('option');
+                    option.textContent = city.name;
+                    option.setAttribute('id', city.id);
+                    option.setAttribute('value', city.name);
+                    option.addEventListener('click', () => {
+                        this.inputCityTarget.value = city.name;
+                        this.resultCityTarget.innerHTML = '';
+                    });
+                    this.resultCityTarget.appendChild(option);
+                });
+            }
         } catch (error) {
             console.error('Error fetching autocomplete data:', error);
         }

@@ -55,15 +55,17 @@ class CarType extends AbstractType
                 'class' => Region::class,
                 'choice_label' => 'name',
                 'label' => 'Région de la voiture',
-            ])
-            ->add('departement', TextType::class, [
-                'label' => 'Département de la voiture',
                 'attr' => [
-                    'placeholder' => 'Nom du département',
                     'data-autocomplete-target' => 'inputDep',
                     'data-action ' => 'input->autocomplete#onSearchInputDepartement',
                 ],
             ])
+          /*  ->add('departement', ChoiceType::class, [
+                'label' => 'Département de la voiture',
+                'attr' => [
+                    'placeholder' => 'Nom du département',
+                ],
+            ])*/
             /*->add('carModel', EntityType::class, [
                 'class' => ModelsCar::class,
                 'choice_label' => 'name',
@@ -76,6 +78,15 @@ class CarType extends AbstractType
                     'placeholder' => 'Nom du modèle',
                     'data-autocomplete-target' => 'input',
                     'data-action ' => 'input->autocomplete#onSearchInputModel',
+                ],
+            ])
+            ->add('city', TextType::class, [
+                'label' => 'Ville de la voiture',
+                'mapped' => false,
+                'attr' => [
+                    'placeholder' => 'Ville',
+                    'data-autocomplete-target' => 'inputCity',
+                    'data-action ' => 'input->autocomplete#onSearchInputCity',
                 ],
             ])
             ->add('years', NumberType::class, [

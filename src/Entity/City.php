@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CityRepository::class)]
@@ -29,6 +31,15 @@ class City extends AbstractEntity
     #[ORM\ManyToOne(inversedBy: 'cities')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Region $codeRegion = null;
+
+    #[ORM\OneToMany(targetEntity: Car::class, mappedBy: 'city', orphanRemoval: true)]
+    private Collection $cars;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->cars = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -91,6 +102,36 @@ class City extends AbstractEntity
     public function setCodeRegion(?Region $codeRegion): static
     {
         $this->codeRegion = $codeRegion;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Car>
+     */
+    public function getCars(): Collection
+    {
+        return $this->cars;
+    }
+
+    public function addCar(Car $car): static
+    {
+        if (!$this->cars->contains($car)) {
+            $this->cars->add($car);
+            $car->setCity($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCar(Car $car): static
+    {
+        if ($this->cars->removeElement($car)) {
+            // set the owning side to null (unless already changed)
+            if ($car->getCity() === $this) {
+                $car->setCity(null);
+            }
+        }
 
         return $this;
     }

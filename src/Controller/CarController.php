@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Car;
+use App\Entity\City;
+use App\Entity\Departement;
 use App\Entity\ModelsCar;
 use App\Form\CarType;
 use App\Repository\CarRepository;
+use App\Repository\CityRepository;
 use App\Repository\DepartementRepository;
 use App\Repository\ModelsCarRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,7 +21,9 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/car')]
 class CarController extends AbstractController
 {
-    public function __construct(private readonly ModelsCarRepository $modelsCarRepository, private readonly DepartementRepository $departementRepository)
+    public function __construct(private readonly ModelsCarRepository   $modelsCarRepository,
+                                private readonly DepartementRepository $departementRepository,
+                                private readonly CityRepository        $cityRepository)
     {
     }
 
@@ -47,11 +52,15 @@ class CarController extends AbstractController
             $year = $form->get('years')->getData();
             /** @var ModelsCar $model */
             $model = $this->modelsCarRepository->findOneBy(['name' => $form->get('model')->getData()]);
-            $departement = $this->departementRepository->findOneBy(['name' => $form->get('departement')->getData()]);
+            /** @var Departement $departement */
+            $departement = $this->departementRepository->findOneBy(['name' => $request->request->get('departement')]);
+            /** @var City $city */
+            $city = $this->cityRepository->findOneBy(['name' => $form->get('city')->getData()]);
 
             $car->setCarModel($model);
             $car->setDepartement($departement);
             $car->setYearOfManufacture($year);
+            $car->setCity($city);
 
             $entityManager->persist($car);
             $entityManager->flush();
@@ -116,5 +125,14 @@ class CarController extends AbstractController
         $departements = $this->departementRepository->findDepartementByCode($request->query->get('query'));
 
         return $this->json($departements, 200);
+    }
+
+    #[Route('/autocomplete/city', name: 'app_car_autocomplete_city', methods: ['GET'])]
+    public function autocompleteCity(Request $request): \Symfony\Component\HttpFoundation\JsonResponse
+    {
+        $departement = $this->departementRepository->findOneBy(['name' => $request->query->get('query')]);
+        $city = $this->cityRepository->findCityByDepartement($departement->getId(), $request->query->get('search'));
+
+        return $this->json($city, 200);
     }
 }
