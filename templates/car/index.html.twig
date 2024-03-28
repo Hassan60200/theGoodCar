@@ -5,25 +5,67 @@
 {% block body %}
     <div class="container">
         <h1 class="text-center">Nos voitures disponibles</h1>
+        <div class="card p-5">
+            <div class="row">
+                <div class="col-2">
+                    <select name="regions" id="listRegions" class="form-control">
+                        {% for region in regions %}
+                            <option value="{{ region.id }}">{{ region.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-2">
+                    <select name="departement" id="departementByRegion" class="form-control">
+
+                    </select>
+                </div>
+                <div>
+                    <label for="filterPrice" class="form-label">Prix</label>
+                    <input type="range" class="form-range" id="filterPrice" min="{{ min(prices) }}"
+                           max="{{ max(prices) }}">
+                    <span>Min: <span id="minValue">{{ min(prices) }}</span></span>
+                    <span>Max: <span id="maxValue">{{ max(prices) }}</span></span>
+                </div>
+            </div>
+        </div>
 
         <div class="row">
             {% for car in cars %}
-            <div class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                    <img src="{{ vich_uploader_asset(car, 'imageFile') }}" class="card-img-top" alt="test">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <a href="{{ path('app_car_show', {'id': car.id}) }}">
-                            {{ car.brand.name }}, {{ car.carModel.name }}
-                            </a>
-                        </h5>
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <img src="{{ vich_uploader_asset(car, 'imageFile') }}" class="card-img-top" alt="test">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{{ path('app_car_show', {'id': car.id}) }}">
+                                    {{ car.brand.name }}, {{ car.carModel.name }}
+                                </a>
+                            </h5>
+                            <p class="card-text">{{ car.price }} €</p>
+                        </div>
                     </div>
                 </div>
-            </div>
             {% endfor %}
         </div>
         <div class="pagination col-lg-12 justify-content-center text-center my-5">
             {{ knp_pagination_render(cars) }}
         </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const listRegions = document.getElementById('listRegions');
+            const departementByRegion = document.getElementById('departementByRegion');
+            const filterPrice = document.getElementById('filterPrice');
+
+            listRegions.addEventListener('change', function () {
+
+                const url = window.location.href + "?region=" + listRegions.value;
+                window.location.href = url;
+            });
+
+
+
+        });
+    </script>
 {% endblock %}

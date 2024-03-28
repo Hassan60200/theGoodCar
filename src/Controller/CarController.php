@@ -11,6 +11,7 @@ use App\Repository\CarRepository;
 use App\Repository\CityRepository;
 use App\Repository\DepartementRepository;
 use App\Repository\ModelsCarRepository;
+use App\Repository\RegionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,6 +24,7 @@ class CarController extends AbstractController
 {
     public function __construct(private readonly ModelsCarRepository   $modelsCarRepository,
                                 private readonly DepartementRepository $departementRepository,
+                                private readonly RegionRepository      $regionRepository,
                                 private readonly CityRepository        $cityRepository)
     {
     }
@@ -30,14 +32,28 @@ class CarController extends AbstractController
     #[Route('/', name: 'app_car_index', methods: ['GET'])]
     public function index(CarRepository $carRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        $cars = $paginator->paginate(
-            $carRepository->findAll(),
+        $regions = $this->regionRepository->findAll();
+
+        if ($region = $request->query->get('region')) {
+            $cars = $carRepository->findBy(['region' => $region]);
+        } else {
+            $cars = $carRepository->findAll();
+        }
+
+        $carsPaginate = $paginator->paginate(
+            $cars,
             $request->query->getInt('page', 1),
             10
         );
+        $prices = [];
+        foreach ($cars as $car) {
+            $prices[] = $car->getPrice();
+        }
 
         return $this->render('car/index.html.twig', [
-            'cars' => $cars,
+            'cars' => $carsPaginate,
+            'regions' => $regions,
+            'prices' => $prices,
         ]);
     }
 
