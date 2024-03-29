@@ -1,33 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Car index{% endblock %}
+{% block title %} Liste voitures {% endblock %}
 
 {% block body %}
     <div class="container">
-        <h1 class="text-center">Nos voitures disponibles</h1>
-        <div class="card p-5">
-            <div class="row">
-                <div class="col-2">
-                    <select name="regions" id="listRegions" class="form-control">
-                        {% for region in regions %}
-                            <option value="{{ region.id }}">{{ region.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-2">
-                    <select name="departement" id="departementByRegion" class="form-control">
-
-                    </select>
-                </div>
-                <div>
-                    <label for="filterPrice" class="form-label">Prix</label>
-                    <input type="range" class="form-range" id="filterPrice" min="{{ min(prices) }}"
-                           max="{{ max(prices) }}">
-                    <span>Min: <span id="minValue">{{ min(prices) }}</span></span>
-                    <span>Max: <span id="maxValue">{{ max(prices) }}</span></span>
+        <h1 class="text-center my-5">Nous avons {{ cars | length }} voitures disponibles</h1>
+        <div class="accordion border border-black m-4" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button text-center" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Rechercher une voiture
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show m-4" aria-labelledby="headingOne"
+                     data-bs-parent="#accordionExample" style="">
+                    <div class="row">
+                        <div class="col-2">
+                            <select name="regions" id="listRegions" class="form-control">
+                                <option value="null">Choisir une région</option>
+                                {% for region in regions %}
+                                    <option value="{{ region.id }}">{{ region.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-2">
+                            <select name="departement" id="departementByRegion" class="form-control">
+                                <option value="null">Choisir un département</option>
+                                {% for departement in departements %}
+                                    <option value="{{ departement.id }}">{{ departement.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-6 d-flex justify-content-between">
+                            <div class="col-md-5">
+                                <input type="number" id="minPrice" value="{{ min(prices) }}" class="form-control"/>
+                            </div>
+                            <div class="col-md-5">
+                                <input type="number" id="maxPrice" value="{{ max(prices) }}" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            <input type="reset" class="btn btn-danger" id="reset" value="X">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
 
         <div class="row">
             {% for car in cars %}
@@ -56,14 +76,49 @@
         document.addEventListener('DOMContentLoaded', function () {
             const listRegions = document.getElementById('listRegions');
             const departementByRegion = document.getElementById('departementByRegion');
-            const filterPrice = document.getElementById('filterPrice');
+            const minPrice = document.getElementById('minPrice');
+            const maxPrice = document.getElementById('maxPrice');
 
             listRegions.addEventListener('change', function () {
 
-                const url = window.location.href + "?region=" + listRegions.value;
-                window.location.href = url;
+                window.location.href = window.location.href + "?region=" + listRegions.value;
             });
 
+            minPrice.addEventListener('change', function () {
+                let currentUrl = window.location.href;
+
+                if (currentUrl.includes('?')) {
+                    if (currentUrl.includes('minPrice')) {
+                        currentUrl = currentUrl.replace(/minPrice=\d+/, 'minPrice=' + minPrice.value);
+                    } else {
+                        currentUrl += '&minPrice=' + minPrice.value;
+                    }
+                } else {
+                    currentUrl += '?minPrice=' + minPrice.value;
+                }
+                window.location.href = currentUrl;
+            });
+
+            maxPrice.addEventListener('change', function () {
+                let currentUrl = window.location.href;
+
+                if (currentUrl.includes('?')) {
+                    if (currentUrl.includes('maxPrice')) {
+                        currentUrl = currentUrl.replace(/maxPrice=\d+/, 'maxPrice=' + maxPrice.value);
+                    } else {
+                        currentUrl += '&maxPrice=' + maxPrice.value;
+                    }
+                } else {
+                    currentUrl += '?maxPrice=' + maxPrice.value;
+                }
+
+                window.location.href = currentUrl;
+            });
+
+
+            document.getElementById('reset').addEventListener('click', function () {
+                window.location.href = window.location.href.split('?')[0];
+            });
 
 
         });

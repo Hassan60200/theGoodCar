@@ -36,6 +36,13 @@ class CarController extends AbstractController
 
         if ($region = $request->query->get('region')) {
             $cars = $carRepository->findBy(['region' => $region]);
+            $departements = $this->departementRepository->findBy(['region' => $region]);
+        } elseif ($request->query->get('minPrice') && $request->query->get('maxPrice')) {
+            $cars = $carRepository->findByPrices($request->query->get('minPrice'), $request->query->get('maxPrice'));
+        } elseif ($minPrice = $request->query->get('minPrice')) {
+            $cars = $carRepository->findByMinPrice($minPrice);
+        } elseif ($maxPrice = $request->query->get('maxPrice')) {
+            $cars = $carRepository->findByMaxPrice($maxPrice);
         } else {
             $cars = $carRepository->findAll();
         }
@@ -54,6 +61,7 @@ class CarController extends AbstractController
             'cars' => $carsPaginate,
             'regions' => $regions,
             'prices' => $prices,
+            'departements' => $departements ?? [],
         ]);
     }
 

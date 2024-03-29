@@ -45,4 +45,46 @@ class CarRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findByRegionAndDepartement($region, $departement): array
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.region', 'r')
+            ->innerJoin('c.departement', 'd')
+            ->andWhere('r.id = :region')
+            ->andWhere('d.id = :departement')
+            ->setParameter('region', $region)
+            ->setParameter('departement', $departement)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByMinPrice(int $minPrice): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.price >= :minPrice')
+            ->setParameter('minPrice', $minPrice)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByMaxPrice(int $maxPrice): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.price <= :maxPrice')
+            ->setParameter('maxPrice', $maxPrice)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByPrices(int $minPrice, int $maxPrice): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.price >= :minPrice')
+            ->andWhere('c.price <= :maxPrice')
+            ->setParameter('minPrice', $minPrice)
+            ->setParameter('maxPrice', $maxPrice)
+            ->getQuery()
+            ->getResult();
+    }
 }
