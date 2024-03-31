@@ -22,10 +22,10 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/car')]
 class CarController extends AbstractController
 {
-    public function __construct(private readonly ModelsCarRepository   $modelsCarRepository,
-                                private readonly DepartementRepository $departementRepository,
-                                private readonly RegionRepository      $regionRepository,
-                                private readonly CityRepository        $cityRepository)
+    public function __construct(private readonly ModelsCarRepository $modelsCarRepository,
+        private readonly DepartementRepository $departementRepository,
+        private readonly RegionRepository $regionRepository,
+        private readonly CityRepository $cityRepository)
     {
     }
 
@@ -43,9 +43,12 @@ class CarController extends AbstractController
             $cars = $carRepository->findByMinPrice($minPrice);
         } elseif ($maxPrice = $request->query->get('maxPrice')) {
             $cars = $carRepository->findByMaxPrice($maxPrice);
+        } elseif ($brand = $request->query->get('brand')) {
+            $cars = $carRepository->findByBrand($brand);
         } else {
             $cars = $carRepository->findAll();
         }
+
 
         $carsPaginate = $paginator->paginate(
             $cars,
@@ -127,7 +130,7 @@ class CarController extends AbstractController
     #[Route('/{id}', name: 'app_car_delete', methods: ['POST'])]
     public function delete(Request $request, Car $car, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $car->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$car->getId(), $request->request->get('_token'))) {
             $entityManager->remove($car);
             $entityManager->flush();
         }

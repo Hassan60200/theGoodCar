@@ -3,6 +3,12 @@
 {% block title %}Connectez-vous{% endblock %}
 
 {% block body %}
+    <style>
+        a {
+            color: #3b82f6 !important;
+            font-weight: bolder !important;
+        }
+    </style>
     <div class="container mt-5">
         <div class="card">
             <form method="post">
@@ -36,6 +42,8 @@
                     </button>
                 </div>
             </form>
+            <a href="{{ path('app_register') }}">Pas encore inscrit ?</a>
+            <a href="{{ path('app_forgot_password') }}">Mot de passe oublié ?</a>
         </div>
     </div>
 {% endblock %}

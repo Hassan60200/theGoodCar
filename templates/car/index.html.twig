@@ -17,6 +17,9 @@
                      data-bs-parent="#accordionExample" style="">
                     <div class="row">
                         <div class="col-2">
+                            <input type="search" id="searchCars" class="form-control" placeholder="Rechercher">
+                        </div>
+                        <div class="col-2">
                             <select name="regions" id="listRegions" class="form-control">
                                 <option value="null">Choisir une région</option>
                                 {% for region in regions %}
@@ -32,7 +35,15 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-6 d-flex justify-content-between">
+                        <div class="col-2">
+                            <select name="brand" id="brand" class="form-control">
+                                <option value="null">Choisir une marques</option>
+                                {% for car in cars %}
+                                    <option value="{{ car.brand.id }}">{{ car.brand.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-3 d-flex justify-content-between">
                             <div class="col-md-5">
                                 <input type="number" id="minPrice" value="{{ min(prices) }}" class="form-control"/>
                             </div>
@@ -40,7 +51,7 @@
                                 <input type="number" id="maxPrice" value="{{ max(prices) }}" class="form-control"/>
                             </div>
                         </div>
-                        <div class="col-1">
+                        <div class="col-1" id="resetLayout" hidden="hidden">
                             <input type="reset" class="btn btn-danger" id="reset" value="X">
                         </div>
                     </div>
@@ -78,47 +89,47 @@
             const departementByRegion = document.getElementById('departementByRegion');
             const minPrice = document.getElementById('minPrice');
             const maxPrice = document.getElementById('maxPrice');
+            const brand = document.getElementById('brand');
+
+            function updateUrlParam(paramName, paramValue) {
+                let currentUrl = window.location.href;
+                let newUrl;
+
+                if (currentUrl.includes('?')) {
+                    if (currentUrl.includes(paramName)) {
+                        newUrl = currentUrl.replace(new RegExp(paramName + '=\\d+'), paramName + '=' + paramValue);
+                    } else {
+                        newUrl = currentUrl + '&' + paramName + '=' + paramValue;
+                    }
+                } else {
+                    newUrl = currentUrl + '?' + paramName + '=' + paramValue;
+                }
+                window.location.href = newUrl;
+            }
 
             listRegions.addEventListener('change', function () {
-
-                window.location.href = window.location.href + "?region=" + listRegions.value;
+                updateUrlParam('region', listRegions.value);
             });
 
             minPrice.addEventListener('change', function () {
-                let currentUrl = window.location.href;
-
-                if (currentUrl.includes('?')) {
-                    if (currentUrl.includes('minPrice')) {
-                        currentUrl = currentUrl.replace(/minPrice=\d+/, 'minPrice=' + minPrice.value);
-                    } else {
-                        currentUrl += '&minPrice=' + minPrice.value;
-                    }
-                } else {
-                    currentUrl += '?minPrice=' + minPrice.value;
-                }
-                window.location.href = currentUrl;
+                updateUrlParam('minPrice', minPrice.value);
             });
 
             maxPrice.addEventListener('change', function () {
-                let currentUrl = window.location.href;
-
-                if (currentUrl.includes('?')) {
-                    if (currentUrl.includes('maxPrice')) {
-                        currentUrl = currentUrl.replace(/maxPrice=\d+/, 'maxPrice=' + maxPrice.value);
-                    } else {
-                        currentUrl += '&maxPrice=' + maxPrice.value;
-                    }
-                } else {
-                    currentUrl += '?maxPrice=' + maxPrice.value;
-                }
-
-                window.location.href = currentUrl;
+                updateUrlParam('maxPrice', maxPrice.value);
             });
 
-
-            document.getElementById('reset').addEventListener('click', function () {
-                window.location.href = window.location.href.split('?')[0];
+            brand.addEventListener('change', function () {
+                updateUrlParam('brand', brand.value);
             });
+
+            if (window.location.href.includes('?')){
+                document.getElementById('resetLayout').removeAttribute('hidden');
+                document.getElementById('reset').addEventListener('click', function () {
+                    window.location.href = window.location.href.split('?')[0];
+                });
+            }
+
 
 
         });
