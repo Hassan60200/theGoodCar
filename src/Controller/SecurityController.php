@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Form\ResetPasswordType;
 use App\Repository\UserRepository;
 use App\Services\EmailNotificationManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,7 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
@@ -114,8 +114,11 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_forgot_password');
         }
 
-        if ($request->isMethod('POST')) {
-            $password = $request->request->get('password');
+        $form = $this->createForm(ResetPasswordType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $password = $form->get('password')->getData();
             $user->setPassword($passwordEncoder->hashPassword($user, $password));
             $this->entityManager->flush();
 
@@ -124,7 +127,7 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('security/reset-password.html.twig', ['token' => $token]);
+        return $this->render('security/reset-password.html.twig', ['token' => $token, 'form' => $form->createView()]);
     }
 
     #[Route('/registration/success', name: 'app_registration_success')]
@@ -132,5 +135,4 @@ class SecurityController extends AbstractController
     {
         return $this->render('registration/success.html.twig');
     }
-
 }
