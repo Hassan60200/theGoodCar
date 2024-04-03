@@ -3,12 +3,13 @@
 namespace App\Services;
 
 use App\Entity\User;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 
 class EmailNotificationManager
 {
-    public function __construct(private readonly MailerInterface $mailer)
+    public function __construct(private readonly MailerInterface $mailer, private readonly LoggerInterface $logger)
     {
     }
 
@@ -28,17 +29,34 @@ class EmailNotificationManager
 
     public function sendEmailResetPassword(User $user): void
     {
+        try {
+            $email = (new TemplatedEmail())
+                ->from('noreply@thegoodcard.fr')
+                ->to($user->getEmail())
+                ->subject('Réinitialisation de votre mot de passe')
+                ->htmlTemplate('email/reset_password.html.twig')
+                ->context([
+                    'user' => $user,
+                ]);
+
+            $this->mailer->send($email);
+            $this->logger->info('Email envoyé pour la réinitialisation du mot de passe');
+        } catch (\Exception $e) {
+            throw new \Exception('Erreur lors de l\'envoi de l\'email'.$e->getMessage());
+        }
+    }
+
+    public function verifyEmail(User $user): void
+    {
         $email = (new TemplatedEmail())
             ->from('noreply@thegoodcard.fr')
             ->to($user->getEmail())
-            ->subject('Réinitialisation de votre mot de passe')
-            ->htmlTemplate('email/reset_password.html.twig')
+            ->subject('Vérification de votre adresse email')
+            ->htmlTemplate('email/verify_email.html.twig')
             ->context([
                 'user' => $user,
             ]);
 
         $this->mailer->send($email);
-
     }
-
 }

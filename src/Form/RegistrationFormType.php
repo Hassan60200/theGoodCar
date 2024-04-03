@@ -21,25 +21,25 @@ class RegistrationFormType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'Votre email',
                 'attr' => [
-                    'class' => 'form-control-plaintext border border-dark',
+                    'class' => 'form-control ',
                 ],
             ])
             ->add('lastName', TextType::class, [
                 'label' => 'Nom de famille',
                 'attr' => [
-                    'class' => 'form-control-plaintext border border-dark',
+                    'class' => 'form-control ',
                 ],
             ])
             ->add('firstName', TextType::class, [
                 'label' => 'Prénom',
                 'attr' => [
-                    'class' => 'form-control-plaintext border border-dark',
+                    'class' => 'form-control ',
                 ],
             ])
             ->add('age', IntegerType::class, [
                 'label' => 'Age',
                 'attr' => [
-                    'class' => 'form-control-plaintext border border-dark',
+                    'class' => 'form-control ',
                 ],
             ])
             ->add('password', PasswordType::class, [
@@ -47,7 +47,7 @@ class RegistrationFormType extends AbstractType
                 // this is read and encoded in the controller
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password',
-                    'class' => 'form-control-plaintext border border-dark', ],
+                    'class' => 'form-control ',],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter a password',

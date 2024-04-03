@@ -12,16 +12,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    public function __construct(private readonly EmailNotificationManager $emailNotificationManager, private readonly UserRepository $userRepository)
+    public function __construct(private readonly EmailNotificationManager $emailNotificationManager,
+                                private readonly UserRepository           $userRepository,
+                                private readonly EntityManagerInterface   $entityManager)
     {
     }
 
     #[Route(path: '/register', name: 'app_register')]
-    public function register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordEncoder, EmailNotificationManager $emailNotificationManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $passwordEncoder): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -32,10 +35,11 @@ class SecurityController extends AbstractController
             $password = $form->get('password')->getData();
             $user->setPassword($passwordEncoder->hashPassword($user, $password));
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
 
-            $emailNotificationManager->sendEmailAfterRegistration($user);
+            $this->emailNotificationManager->sendEmailAfterRegistration($user);
+            $this->emailNotificationManager->verifyEmail($user);
 
             $this->addFlash(
                 'success',
@@ -80,13 +84,53 @@ class SecurityController extends AbstractController
 
             if (!$user) {
                 $this->addFlash('danger', 'Aucun compte n\'a été trouvé avec cet email !');
+
                 return $this->redirectToRoute('app_forgot_password');
             } else {
+                $resetPasswordToken = uniqid();
+
+                $user->setResetPasswordToken($resetPasswordToken);
+                $this->entityManager->flush();
+
                 $this->emailNotificationManager->sendEmailResetPassword($user);
+
                 $this->addFlash('success', 'Un email vous a été envoyé pour réinitialiser votre mot de passe !');
+
                 return $this->redirectToRoute('app_login');
             }
         }
+
         return $this->render('security/forgot-password.html.twig');
     }
+
+    #[Route(path: '/reset-password/{token}', name: 'app_reset_password')]
+    public function resetPassword(Request $request, string $token, UserPasswordHasherInterface $passwordEncoder): Response
+    {
+        $user = $this->userRepository->findOneBy(['resetPasswordToken' => $token]);
+
+        if (!$user) {
+            $this->addFlash('danger', 'Token invalide !');
+
+            return $this->redirectToRoute('app_forgot_password');
+        }
+
+        if ($request->isMethod('POST')) {
+            $password = $request->request->get('password');
+            $user->setPassword($passwordEncoder->hashPassword($user, $password));
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Votre mot de passe a bien été réinitialisé !');
+
+            return $this->redirectToRoute('app_login');
+        }
+
+        return $this->render('security/reset-password.html.twig', ['token' => $token]);
+    }
+
+    #[Route('/registration/success', name: 'app_registration_success')]
+    public function registrationSuccess(): Response
+    {
+        return $this->render('registration/success.html.twig');
+    }
+
 }
