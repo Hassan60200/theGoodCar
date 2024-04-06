@@ -12,6 +12,11 @@
   resolved "https://registry.npmjs.org/hotkeys-js/-/hotkeys-js-3.13.7.tgz"
   integrity sha512-ygFIdTqqwG4fFP7kkiYlvayZppeIQX2aPpirsngkv1xM1lP0piDY5QEh68nQnIKvz64hfocxhBaD/uK3sSK1yQ==
 
+leaflet@^1.9.4:
+  version "1.9.4"
+  resolved "https://registry.npmjs.org/leaflet/-/leaflet-1.9.4.tgz"
+  integrity sha512-nxS1ynzJOmOlHp+iL3FyWqK89GtNL8U8rvlMOsQdTTssxZwCXh8N2NB3GDQOL+YR3XnWyZAxwQixURb+FA74PA==
+
 stimulus-use@^0.52.2:
   version "0.52.2"
   resolved "https://registry.npmjs.org/stimulus-use/-/stimulus-use-0.52.2.tgz"

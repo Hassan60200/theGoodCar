@@ -1,9 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Car{% endblock %}
+{% block title %}Voiture {{ car.brand.name }}-{{ car.carModel.name }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
 
 {% block body %}
-   <div class="container">
+    <div class="container mt-5">
+        <div class="row">
+            <div class="card col-md-8">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Détails de la voiture</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><strong>Date de
+                                        fabrication:</strong> {{ car.yearOfManufacture|date("d/m/Y") }}</li>
+                                <li class="list-group-item"><strong>Couleur:</strong> {{ car.color }}</li>
+                                <li class="list-group-item"><strong>Prix:</strong> {{ car.price }} €</li>
+                                <li class="list-group-item"><strong>Type de carburant:</strong> {{ car.fuelType }}</li>
+                                <li class="list-group-item"><strong>Kilométrage:</strong> {{ car.mileage }} km</li>
+                                <li class="list-group-item"><strong>Statut:</strong> {{ car.status }}</li>
+                            </ul>
+                        </div>
+                        <div class="car-image">
+                            <img src="{{ vich_uploader_asset(car, 'imageFile') }}" class="card-img-top" alt="test">
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-   </div>
+            <div class="col-md-4">
+
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
 {% endblock %}
