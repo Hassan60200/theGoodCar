@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/car')]
 class CarController extends AbstractController
@@ -101,7 +102,7 @@ class CarController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_car_show', methods: ['GET'])]
+    #[Route('/{slug}', name: 'app_car_show', methods: ['GET'])]
     public function show(Car $car): Response
     {
         return $this->render('car/show.html.twig', [
@@ -161,5 +162,15 @@ class CarController extends AbstractController
         $city = $this->cityRepository->findCityByDepartement($departement->getId(), $request->query->get('search'));
 
         return $this->json($city, 200);
+    }
+
+    #[IsGranted('ROLE_USER')]
+    #[Route('/{id}/buy', name: 'app_car_buy', methods: ['GET'])]
+    public function buyCar(Car $car): Response
+    {
+        $car->setStatus('sold');
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirectToRoute('app_car_index', [], Response::HTTP_SEE_OTHER);
     }
 }

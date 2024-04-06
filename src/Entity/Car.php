@@ -60,6 +60,9 @@ class Car extends AbstractEntity
     #[ORM\JoinColumn(nullable: false)]
     private ?City $city = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -215,5 +218,20 @@ class Car extends AbstractEntity
         $this->city = $city;
 
         return $this;
+    }
+
+    public function setSlug(): void
+    {
+        $this->slug = $this->brand->getName().'-'.$this->carModel->getName().'-'.$this->id;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    public function __toString(): string
+    {
+        return $this->brand->getName().' '.$this->carModel->getName();
     }
 }
