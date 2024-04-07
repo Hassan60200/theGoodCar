@@ -63,6 +63,9 @@ class Car extends AbstractEntity
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
+    #[ORM\ManyToOne(inversedBy: 'car')]
+    private ?Order $orderCar = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -233,5 +236,17 @@ class Car extends AbstractEntity
     public function __toString(): string
     {
         return $this->brand->getName().' '.$this->carModel->getName();
+    }
+
+    public function getOrderCar(): ?Order
+    {
+        return $this->orderCar;
+    }
+
+    public function setOrderCar(?Order $orderCar): static
+    {
+        $this->orderCar = $orderCar;
+
+        return $this;
     }
 }

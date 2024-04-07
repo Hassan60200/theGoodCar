@@ -163,14 +163,4 @@ class CarController extends AbstractController
 
         return $this->json($city, 200);
     }
-
-    #[IsGranted('ROLE_USER')]
-    #[Route('/{id}/buy', name: 'app_car_buy', methods: ['GET'])]
-    public function buyCar(Car $car): Response
-    {
-        $car->setStatus('sold');
-        $this->getDoctrine()->getManager()->flush();
-
-        return $this->redirectToRoute('app_car_index', [], Response::HTTP_SEE_OTHER);
-    }
 }
