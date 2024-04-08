@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+{% block title %}Mon Panier{% endblock %}
+
+{% block body %}
+    {% set totalPrice = 0 %}
+    <div class="container">
+        <h1 class="text-center">Mon Panier</h1>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Voiture</th>
+                <th>Image</th>
+                <th>Prix</th>
+                <th>Supprimer</th>
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in cart %}
+                {% set itemTotal = item.car.price * item.quantity %}
+                {% set totalPrice = totalPrice + itemTotal %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td><img src="{{ vich_uploader_asset(item.car, 'imageFile') }}" class="" style="width: 10%;"
+                             alt="test"></td>
+                    <td>{{ item.car.price }}</td>
+                    <td><a href="{{ path('cart_remove', {'id': item.car.id}) }}" class="btn btn-danger">Supprimer</a>
+                    </td>
+                    <td>{{ item.car.price }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <p>Total : {{ totalPrice }} €</p>
+        <a href="" class="btn btn-primary">Commander</a>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}
