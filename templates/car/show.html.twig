@@ -34,23 +34,31 @@
             </div>
 
             <div class="col-md-4">
-            <div class="card">
+                <div class="card">
                     <div class="card-header bg-primary text-white">
                         <h2 class="mb-0">Envie d'acheter ?</h2>
                     </div>
-                <div class="card-body">
-                    <button>
-                        <a href="{{ path('cart_add', {'id': car.id}) }}" class="btn btn-success">Acheter</a>
-                    </button>
+                    <div class="card-body">
+                        {% if app.user %}
+                            <button>
+                                <a href="{{ path('cart_add', {'id': car.id}) }}" class="btn btn-success">Acheter</a>
+                            </button>
+                        {% else %}
+                            <button>
+                                <a href="{{ path('app_login') }}" class="btn btn-success">Connectez-vous pour
+                                    acheter</a>
+                            </button>
+                        {% endif %}
+                    </div>
+
+
                 </div>
-
-
             </div>
         </div>
     </div>
 
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+    {% endblock %}

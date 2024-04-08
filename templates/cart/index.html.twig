@@ -11,12 +11,13 @@
                 <th>Voiture</th>
                 <th>Image</th>
                 <th>Prix</th>
-                <th>Supprimer</th>
+                <th>Action</th>
                 <th>Total</th>
             </tr>
             </thead>
             <tbody>
             {% for item in cart %}
+
                 {% set itemTotal = item.car.price * item.quantity %}
                 {% set totalPrice = totalPrice + itemTotal %}
                 <tr>
@@ -32,7 +33,7 @@
             </tbody>
         </table>
         <p>Total : {{ totalPrice }} €</p>
-        <a href="" class="btn btn-primary">Commander</a>
+        <a href="{{ path('app_stripe_checkout') }}" class="btn btn-primary">Commander</a>
     </div>
 {% endblock %}
 

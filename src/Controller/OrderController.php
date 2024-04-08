@@ -45,12 +45,11 @@ class OrderController extends AbstractController
 
         $cart = $session->get('cart', []);
 
-        if (isset($cart[$id])) {
-            ++$cart[$id]['quantity'];
-        } else {
+        if (!isset($cart[$id])) {
             $cart[$id] = [
                 'car' => $car,
                 'quantity' => 1,
+                'id' => $id,
                 'name' => $car->getBrand()->getName().' '.$car->getCarModel()->getName(),
             ];
         }
@@ -59,7 +58,6 @@ class OrderController extends AbstractController
 
         return $this->redirectToRoute('app_cart', [], 301);
     }
-
 
     #[Route('/cart/remove/{id}', name: 'cart_remove')]
     public function removeFromCart(int $id, SessionInterface $session): Response
@@ -74,4 +72,5 @@ class OrderController extends AbstractController
 
         return $this->redirectToRoute('app_cart');
     }
+
 }
