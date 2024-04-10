@@ -32,8 +32,10 @@
             {% endfor %}
             </tbody>
         </table>
-        <p>Total : {{ totalPrice }} €</p>
-        <a href="{{ path('app_stripe_checkout') }}" class="btn btn-primary">Commander</a>
+        <div class="d-block" style="float: right">
+            <p>Total : {{ totalPrice }} €</p>
+            <a href="{{ path('app_cart_checkout') }}" class="btn btn-primary">Commander</a>
+        </div>
     </div>
 {% endblock %}
 
