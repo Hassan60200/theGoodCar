@@ -22,10 +22,10 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/car')]
 class CarController extends AbstractController
 {
-    public function __construct(private readonly ModelsCarRepository $modelsCarRepository,
-        private readonly DepartementRepository $departementRepository,
-        private readonly RegionRepository $regionRepository,
-        private readonly CityRepository $cityRepository)
+    public function __construct(private readonly ModelsCarRepository   $modelsCarRepository,
+                                private readonly DepartementRepository $departementRepository,
+                                private readonly RegionRepository      $regionRepository,
+                                private readonly CityRepository        $cityRepository)
     {
     }
 
@@ -34,17 +34,17 @@ class CarController extends AbstractController
     {
         $regions = $this->regionRepository->findAll();
 
-        if ($region = $request->query->get('region')) {
-            $cars = $carRepository->findBy(['region' => $region]);
-            $departements = $this->departementRepository->findBy(['region' => $region]);
-        } elseif ($request->query->get('minPrice') && $request->query->get('maxPrice')) {
-            $cars = $carRepository->findByPrices($request->query->get('minPrice'), $request->query->get('maxPrice'));
-        } elseif ($minPrice = $request->query->get('minPrice')) {
-            $cars = $carRepository->findByMinPrice($minPrice);
-        } elseif ($maxPrice = $request->query->get('maxPrice')) {
-            $cars = $carRepository->findByMaxPrice($maxPrice);
-        } elseif ($brand = $request->query->get('brand')) {
-            $cars = $carRepository->findByBrand($brand);
+        $region = $request->query->get('region');
+        $carDepartment = $request->query->get('carDepartment');
+        $minPrice = $request->query->get('minPrice');
+        $maxPrice = $request->query->get('maxPrice');
+        $brand = $request->query->get('brand');
+        $name = $request->query->get('name');
+        $year = $request->query->get('year');
+        $model = $request->query->get('model');
+
+        if ($region || $carDepartment || $minPrice || $maxPrice || $brand || $name || $year || $model) {
+            $cars = $carRepository->getCarsByFilters($region, $carDepartment, $minPrice, $maxPrice, $brand, $name, $year, $model);
         } else {
             $cars = $carRepository->findAll();
         }
@@ -59,11 +59,19 @@ class CarController extends AbstractController
             $prices[] = $car->getPrice();
         }
 
+        $brands = [];
+        foreach ($cars as $car) {
+            $brands[] = $car->getBrand()->getName();
+        }
+        $brands = array_unique($brands);
+
+
         return $this->render('car/index.html.twig', [
             'cars' => $carsPaginate,
             'regions' => $regions,
             'prices' => $prices,
             'departements' => $departements ?? [],
+            'brands' => $brands,
         ]);
     }
 
@@ -129,7 +137,7 @@ class CarController extends AbstractController
     #[Route('/{id}', name: 'app_car_delete', methods: ['POST'])]
     public function delete(Request $request, Car $car, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$car->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $car->getId(), $request->request->get('_token'))) {
             $entityManager->remove($car);
             $entityManager->flush();
         }

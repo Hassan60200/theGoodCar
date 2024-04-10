@@ -21,80 +21,58 @@ class CarRepository extends ServiceEntityRepository
         parent::__construct($registry, Car::class);
     }
 
-    //    /**
-    //     * @return Car[] Returns an array of Car objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Car
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
-
-    public function findByRegionAndDepartement($region, $departement): array
+    public function getCarsByFilters(?int $region = null, ?int $carDepartment = null, ?float $minPrice = null, ?float $maxPrice = null, ?string $brand = null, ?string $name = null, ?int $year = null, ?int $model = null)
     {
-        return $this->createQueryBuilder('c')
-            ->innerJoin('c.region', 'r')
-            ->innerJoin('c.departement', 'd')
-            ->andWhere('r.id = :region')
-            ->andWhere('d.id = :departement')
-            ->setParameter('region', $region)
-            ->setParameter('departement', $departement)
-            ->getQuery()
-            ->getResult();
-    }
+        $qb = $this->createQueryBuilder('c');
 
-    public function findByMinPrice(int $minPrice): array
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.price >= :minPrice')
-            ->setParameter('minPrice', $minPrice)
-            ->getQuery()
-            ->getResult();
-    }
+        if ($region) {
+            $qb->innerJoin('c.region', 'r')
+                ->andWhere('r.id = :region')
+                ->setParameter('region', $region);
+        }
 
-    public function findByMaxPrice(int $maxPrice): array
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.price <= :maxPrice')
-            ->setParameter('maxPrice', $maxPrice)
-            ->getQuery()
-            ->getResult();
-    }
+        if ($carDepartment) {
+            $qb->innerJoin('c.departement', 'd')
+                ->andWhere('d.id = :departement')
+                ->setParameter('departement', $carDepartment);
+        }
 
-    public function findByPrices(int $minPrice, int $maxPrice): array
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.price >= :minPrice')
-            ->andWhere('c.price <= :maxPrice')
-            ->setParameter('minPrice', $minPrice)
-            ->setParameter('maxPrice', $maxPrice)
-            ->getQuery()
-            ->getResult();
-    }
+        if ($minPrice) {
+            $qb->andWhere('c.price >= :minPrice')
+                ->setParameter('minPrice', $minPrice);
+        }
 
-    public function findByBrand(int $brand): array
-    {
-        return $this->createQueryBuilder('c')
-            ->innerJoin('c.brand', 'b')
-            ->andWhere('b.id = :brand')
-            ->setParameter('brand', $brand)
-            ->getQuery()
+        if ($maxPrice) {
+            $qb->andWhere('c.price <= :maxPrice')
+                ->setParameter('maxPrice', $maxPrice);
+        }
+
+        if ($brand) {
+            $qb->innerJoin('c.brand', 'b')
+                ->andWhere('b.name = :brand')
+                ->setParameter('brand', $brand);
+        }
+
+        if ($year) {
+            $qb->andWhere('c.yearOfManufacture = :year')
+                ->setParameter('year', $year);
+        }
+
+        if ($model) {
+            $qb->innerJoin('c.carModel', 'm')
+                ->andWhere('m.id = :model')
+                ->setParameter('model', $model);
+        }
+
+        if ($name) {
+            $qb->innerJoin('c.brand', 'b')
+                ->innerJoin('c.carModel', 'm')
+                ->andWhere('b.name LIKE :name')
+                ->orWhere('m.name LIKE :name')
+                ->setParameter('name', '%'.$name.'%');
+        }
+
+        return $qb->getQuery()
             ->getResult();
     }
 }
