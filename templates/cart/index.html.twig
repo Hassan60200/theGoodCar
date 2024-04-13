@@ -16,12 +16,12 @@
             </tr>
             </thead>
             <tbody>
-            {% for item in cart %}
+            {% for item in cars %}
 
                 {% set itemTotal = item.car.price * item.quantity %}
                 {% set totalPrice = totalPrice + itemTotal %}
                 <tr>
-                    <td>{{ item.name }}</td>
+                    <td>{{ item.car.brand.name }} {{ item.car.carModel.name }}</td>
                     <td><img src="{{ vich_uploader_asset(item.car, 'imageFile') }}" class="" style="width: 10%;"
                              alt="test"></td>
                     <td>{{ item.car.price }}</td>
@@ -34,7 +34,7 @@
         </table>
         <div class="d-block" style="float: right">
             <p>Total : {{ totalPrice }} €</p>
-            <a href="{{ path('app_cart_checkout') }}" class="btn btn-primary">Commander</a>
+            <a href="{{ path('app_cart_checkout' ) }}" class="btn btn-primary">Commander</a>
         </div>
     </div>
 {% endblock %}

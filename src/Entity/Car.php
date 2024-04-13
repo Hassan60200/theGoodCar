@@ -5,9 +5,11 @@ namespace App\Entity;
 use App\Repository\CarRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[Vich\Uploadable]
 class Car extends AbstractEntity
 {
@@ -65,6 +67,10 @@ class Car extends AbstractEntity
 
     #[ORM\ManyToOne(inversedBy: 'car')]
     private ?Order $orderCar = null;
+
+    public function __construct(private readonly SluggerInterface $slugger)
+    {
+    }
 
     public function getId(): ?int
     {
@@ -223,9 +229,10 @@ class Car extends AbstractEntity
         return $this;
     }
 
+    #[ORM\PrePersist]
     public function setSlug(): void
     {
-        $this->slug = $this->brand->getName().'-'.$this->carModel->getName().'-'.$this->id;
+        $this->slug = $this->slugger->slug($this->brand->getName().' '.$this->carModel->getName())->lower();
     }
 
     public function getSlug(): string

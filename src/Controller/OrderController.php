@@ -32,33 +32,47 @@ class OrderController extends AbstractController
     public function showCart(SessionInterface $session): Response
     {
         $cart = $session->get('cart', []);
+        $cars = [];
+
+        foreach ($cart as $item) {
+            $car = $this->carRepository->find($item['id']);
+            $cars[] = [
+                'car' => $car,
+                'quantity' => $item['quantity'],
+            ];
+        }
 
         return $this->render('cart/index.html.twig', [
             'cart' => $cart,
+            'cars' => $cars,
         ]);
     }
 
-    #[Route('/cart/checkout', name: 'app_cart_checkout')]
+    #[Route('/cart/checkout/', name: 'app_cart_checkout')]
     public function validateBeforeCheckout(SessionInterface $session): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         $cart = $session->get('cart', []);
+        $dateNow = new \DateTime('now');
+        $reference = $dateNow->format('dmY').'-'.uniqid();
 
         $order = new Order();
+        $order->setUser($this->getUser())
+            ->setReference($reference)
+            ->setStatus('PENDING')
+            ->setPurchaseAt(new \DateTimeImmutable('now'))
+            ->setCreatedAt(new \DateTimeImmutable('now'));
 
         foreach ($cart as $item) {
-            $order->setUser($this->getUser())
-                ->setPrice($item['car']->getPrice())
-                ->setStatus('pending')
-                ->setPurchaseAt(new \DateTimeImmutable('now'))
-                ->addCar($item['car']);
-            $order->setCreatedAt(new \DateTimeImmutable('now'));
+            $car = $this->carRepository->find($item['id']);
 
+            $order->addCar($car)
+                ->setPrice($car->getPrice());
         }
 
         $this->entityManager->persist($order);
         $this->entityManager->flush();
 
-        return $this->redirectToRoute('app_stripe_checkout');
+        return $this->redirectToRoute('app_stripe_checkout', ['reference' => $reference]);
     }
 
     #[Route('/cart/add/{id}', name: 'cart_add')]
@@ -74,7 +88,6 @@ class OrderController extends AbstractController
 
         if (!isset($cart[$id])) {
             $cart[$id] = [
-                'car' => $car,
                 'quantity' => 1,
                 'id' => $id,
                 'name' => $car->getBrand()->getName().' '.$car->getCarModel()->getName(),

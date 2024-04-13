@@ -64,15 +64,15 @@
             {% for car in cars %}
                 <div class="col-md-4">
                     <div class="card mb-4 shadow-sm">
-                        <img src="{{ vich_uploader_asset(car, 'imageFile') }}" class="card-img-top" alt="test">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <a href="{{ path('app_car_show', {'slug': car.slug}) }}">
+                        <a href="{{ path('app_car_show', {'slug': car.slug}) }}">
+                            <img src="{{ vich_uploader_asset(car, 'imageFile') }}" class="card-img-top" alt="test">
+                            <div class="card-body">
+                                <h5 class="card-title">
                                     {{ car.brand.name }}, {{ car.carModel.name }}
-                                </a>
-                            </h5>
-                            <p class="card-text">{{ car.price }} €</p>
-                        </div>
+                                </h5>
+                                <p class="card-text">{{ car.price }} €</p>
+                            </div>
+                        </a>
                     </div>
                 </div>
             {% endfor %}
@@ -123,13 +123,12 @@
                 updateUrlParam('brand', brand.value);
             });
 
-            if (window.location.href.includes('?')){
+            if (window.location.href.includes('?')) {
                 document.getElementById('resetLayout').removeAttribute('hidden');
                 document.getElementById('reset').addEventListener('click', function () {
                     window.location.href = window.location.href.split('?')[0];
                 });
             }
-
 
 
         });

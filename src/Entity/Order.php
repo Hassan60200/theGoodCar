@@ -28,15 +28,19 @@ class Order extends AbstractEntity
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
-    #[ORM\ManyToOne(inversedBy: 'orders')]
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $stripeId = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $reference = null;
+
     public function __construct()
     {
+        parent::__construct();
         $this->car = new ArrayCollection();
     }
 
@@ -131,6 +135,18 @@ class Order extends AbstractEntity
     public function setStripeId(?string $stripeId): static
     {
         $this->stripeId = $stripeId;
+
+        return $this;
+    }
+
+    public function getReference(): ?string
+    {
+        return $this->reference;
+    }
+
+    public function setReference(string $reference): static
+    {
+        $this->reference = $reference;
 
         return $this;
     }
