@@ -21,14 +21,8 @@ class CarType extends AbstractType
     public function STATE(): array
     {
         return [
-            'En vente' => 'En vente',
-            'Vendu' => 'Vendu',
-            'Réservé' => 'Réservé',
-            'En attente' => 'En attente',
-            'En réparation' => 'En réparation',
-            'En panne' => 'En panne',
+            'En vente' => 'Vente',
             'Louer' => 'Louer',
-            'Inactive' => 'Inactive',
         ];
     }
 

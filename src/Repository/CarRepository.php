@@ -75,4 +75,16 @@ class CarRepository extends ServiceEntityRepository
         return $qb->getQuery()
             ->getResult();
     }
+
+    public function getAvailaibleCars()
+    {
+        return $this->createQueryBuilder('c')
+            ->orWhere('c.status = :status1')
+            ->orWhere('c.status = :status2')
+            ->setParameter('status1', 'Vente')
+            ->setParameter('status2', 'Louer')
+            ->getQuery()
+            ->getResult();
+    }
+
 }

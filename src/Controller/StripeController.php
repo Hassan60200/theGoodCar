@@ -29,6 +29,7 @@ class StripeController extends AbstractController
         $lineItems = [];
         foreach ($cart as $item) {
             $car = $this->carRepository->find($item['id']);
+            $car->setStatus('Vendu');
             $lineItems[] = [
                 'price_data' => [
                     'currency' => 'eur',

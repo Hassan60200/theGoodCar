@@ -47,7 +47,7 @@ class CarController extends AbstractController
         if ($region || $carDepartment || $minPrice || $maxPrice || $brand || $name || $year || $model) {
             $cars = $carRepository->getCarsByFilters($region, $carDepartment, $minPrice, $maxPrice, $brand, $name, $year, $model);
         } else {
-            $cars = $carRepository->findAll();
+            $cars = $carRepository->getAvailaibleCars();
         }
 
         $carsPaginate = $paginator->paginate(
