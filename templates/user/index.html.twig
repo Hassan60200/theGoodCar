@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil {{ user.lastName }} {{ user.firstName }}{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3>Profil de {{ user.lastName }} {{ user.firstName }}</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Nom:</strong> {{ user.lastName }}</p>
+                <p><strong>Prénom:</strong> {{ user.firstName }}</p>
+                <p><strong>Age:</strong> {{ user.age }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <a href="{{ path('app_user_profil_edit', {id: user.id}) }}" class="btn btn-primary">Modifier</a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <a href="{{ path('app_user_profil_orders', {id: user.id}) }}" class="btn btn-success">Mes
+                        commandes</a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <a href="{{ path('app_user_profil_delete', {id: user.id}) }}" class="btn btn-danger">Supprimer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
