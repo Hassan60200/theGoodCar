@@ -12,11 +12,12 @@ class EmailNotificationManager
     public function __construct(private readonly MailerInterface $mailer, private readonly LoggerInterface $logger)
     {
     }
+    const FROM = 'noreply@thegoodcard.fr';
 
     public function sendEmailAfterRegistration(User $user): void
     {
         $email = (new TemplatedEmail())
-            ->from('noreply@thegoodcard.fr')
+            ->from(self::FROM)
             ->to($user->getEmail())
             ->subject('Bienvenue sur The Good Card')
             ->htmlTemplate('email/welcome.html.twig')
@@ -31,7 +32,7 @@ class EmailNotificationManager
     {
         try {
             $email = (new TemplatedEmail())
-                ->from('noreply@thegoodcard.fr')
+                ->from(self::FROM)
                 ->to($user->getEmail())
                 ->subject('Réinitialisation de votre mot de passe')
                 ->htmlTemplate('email/reset_password.html.twig')
@@ -49,10 +50,24 @@ class EmailNotificationManager
     public function verifyEmail(User $user): void
     {
         $email = (new TemplatedEmail())
-            ->from('noreply@thegoodcard.fr')
+            ->from(self::FROM)
             ->to($user->getEmail())
             ->subject('Vérification de votre adresse email')
             ->htmlTemplate('email/verify_email.html.twig')
+            ->context([
+                'user' => $user,
+            ]);
+
+        $this->mailer->send($email);
+    }
+
+    public function sendEmailAfterOrder(User $user): void
+    {
+        $email = (new TemplatedEmail())
+            ->from(self::FROM)
+            ->to($user->getEmail())
+            ->subject('Confirmation de votre commande')
+            ->htmlTemplate('email/order_confirmation.html.twig')
             ->context([
                 'user' => $user,
             ]);
